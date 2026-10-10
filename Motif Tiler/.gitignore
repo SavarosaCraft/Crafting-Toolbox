@@ -1,0 +1,12 @@
+node_modules/
+dist/
+src-tauri/target/
+
+# Android build output
+src-tauri/gen/android/
+
+# Keystore & credentials
+*.jks
+*.keystore
+keystore.properties
+

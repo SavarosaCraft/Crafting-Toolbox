@@ -1,0 +1,50 @@
+1) 50 white
+2) 9 white - 3 black - 38 white
+3) 7 white - 2 black - 3 white - 2 black - 6 white - 9 black - 7 white - 7 black - 7 white
+4) 6 white - 1 black - 7 white - 1 black - 2 white - 3 black - 9 white - 1 black - 4 white - 2 black - 7 white - 1 black - 6 white
+5) 5 white - 1 black - 9 white - 2 black - 13 white - 1 black - 2 white - 1 black - 10 white - 1 black - 5 white
+6) 4 white - 1 black - 3 white - 3 black - 4 white - 1 black - 15 white - 2 black - 5 white - 3 black - 4 white - 1 black - 4 white
+7) 3 white - 1 black - 3 white - 1 black - 3 white - 1 black - 2 white - 1 black - 16 white - 1 black - 4 white - 2 black - 3 white - 1 black - 3 white - 1 black - 4 white
+8) 3 white - 1 black - 2 white - 1 black - 5 white - 2 black - 21 white - 1 black - 6 white - 1 black - 3 white - 1 black - 3 white
+9) 3 white - 1 black - 8 white - 1 black - 21 white - 1 black - 8 white - 1 black - 3 white - 1 black - 2 white
+10) 3 white - 1 black - 8 white - 1 black - 19 white - 2 black - 9 white - 1 black - 3 white - 1 black - 2 white
+11) 2 white - 1 black - 9 white - 1 black - 20 white - 1 black - 13 white - 1 black - 2 white
+12) 2 white - 1 black - 8 white - 1 black - 22 white - 1 black - 13 white - 1 black - 1 white
+13) 2 white - 1 black - 8 white - 1 black - 22 white - 1 black - 13 white - 1 black - 1 white
+14) 2 white - 1 black - 8 white - 1 black - 23 white - 1 black - 12 white - 1 black - 1 white
+15) 3 white - 1 black - 7 white - 1 black - 2 white - 1 black - 12 white - 1 black - 7 white - 1 black - 11 white - 1 black - 2 white
+16) 3 white - 1 black - 7 white - 1 black - 1 white - 3 black - 10 white - 3 black - 6 white - 1 black - 10 white - 1 black - 3 white
+17) 4 white - 1 black - 6 white - 1 black - 1 white - 1 black - 1 white - 1 black - 10 white - 1 black - 1 white - 1 black - 17 white - 1 black - 3 white
+18) 4 white - 1 black - 6 white - 1 black - 1 white - 3 black - 10 white - 3 black - 16 white - 1 black - 4 white
+19) 4 white - 1 black - 5 white - 1 black - 3 white - 1 black - 3 white - 3 black - 6 white - 1 black - 5 white - 1 black - 11 white - 1 black - 4 white
+20) 5 white - 1 black - 4 white - 1 black - 23 white - 1 black - 9 white - 1 black - 5 white
+21) 6 white - 1 black - 3 white - 1 black - 23 white - 1 black - 8 white - 1 black - 6 white
+22) 6 white - 1 black - 3 white - 1 black - 6 white - 4 black - 4 white - 1 black - 8 white - 1 black - 7 white - 1 black - 7 white
+23) 6 white - 1 black - 3 white - 1 black - 4 white - 1 black - 10 white - 1 black - 7 white - 1 black - 7 white - 1 black - 7 white
+24) 7 white - 1 black - 2 white - 1 black - 1 white - 1 black - 1 white - 1 black - 2 white - 3 black - 6 white - 2 black - 5 white - 2 black - 6 white - 1 black - 8 white
+25) 8 white - 1 black - 2 white - 2 black - 1 white - 1 black - 10 white - 1 black - 2 white - 1 black - 3 white - 1 black - 1 white - 1 black - 5 white - 1 black - 9 white
+26) 9 white - 3 black - 1 white - 2 black - 10 white - 1 black - 2 white - 1 black - 2 white - 1 black - 3 white - 1 black - 3 white - 2 black - 9 white
+27) 11 white - 1 black - 2 white - 1 black - 1 white - 3 black - 5 white - 1 black - 3 white - 1 black - 2 white - 1 black - 4 white - 3 black - 1 white - 2 black - 8 white
+28) 10 white - 1 black - 3 white - 1 black - 9 white - 1 black - 2 white - 4 black - 10 white - 1 black - 8 white
+29) 9 white - 1 black - 3 white - 2 black - 8 white - 1 black - 3 white - 1 black - 13 white - 1 black - 8 white
+30) 8 white - 5 black - 1 white - 1 black - 8 white - 1 black - 2 white - 1 black - 15 white - 1 black - 7 white
+31) 12 white - 1 black - 1 white - 1 black - 7 white - 1 black - 2 white - 1 black - 16 white - 1 black - 7 white
+32) 12 white - 1 black - 1 white - 1 black - 1 white - 2 black - 3 white - 4 black - 17 white - 1 black - 7 white
+33) 12 white - 1 black - 1 white - 1 black - 5 white - 1 black - 21 white - 2 black - 6 white
+34) 12 white - 1 black - 1 white - 1 black - 1 white - 2 black - 2 white - 1 black - 21 white - 2 black - 6 white
+35) 12 white - 1 black - 2 white - 1 black - 4 white - 1 black - 17 white - 1 black - 2 white - 3 black - 6 white
+36) 12 white - 1 black - 2 white - 1 black - 1 white - 1 black - 2 white - 1 black - 17 white - 1 black - 2 white - 1 black - 1 white - 2 black - 5 white
+37) 12 white - 1 black - 2 white - 1 black - 4 white - 2 black - 16 white - 1 black - 2 white - 1 black - 2 white - 2 black - 4 white
+38) 12 white - 1 black - 3 white - 1 black - 4 white - 1 black - 9 white - 1 black - 6 white - 1 black - 2 white - 1 black - 3 white - 2 black - 3 white
+39) 12 white - 1 black - 3 white - 1 black - 5 white - 1 black - 8 white - 1 black - 5 white - 1 black - 3 white - 1 black - 8 white
+40) 12 white - 1 black - 4 white - 1 black - 4 white - 3 black - 6 white - 1 black - 5 white - 1 black - 2 white - 1 black - 9 white
+41) 12 white - 1 black - 5 white - 1 black - 5 white - 1 black - 6 white - 1 black - 3 white - 2 black - 3 white - 1 black - 9 white
+42) 12 white - 1 black - 6 white - 1 black - 3 white - 1 black - 7 white - 1 black - 2 white - 1 black - 5 white - 1 black - 9 white
+43) 12 white - 1 black - 2 white - 2 black - 3 white - 3 black - 3 white - 2 black - 3 white - 4 black - 5 white - 1 black - 9 white
+44) 12 white - 1 black - 7 white - 1 black - 2 white - 1 black - 7 white - 1 black - 1 white - 1 black - 6 white - 1 black - 9 white
+45) 11 white - 1 black - 8 white - 1 black - 2 white - 1 black - 7 white - 1 black - 1 white - 1 black - 6 white - 1 black - 9 white
+46) 11 white - 1 black - 1 white - 1 black - 2 white - 1 black - 3 white - 1 black - 2 white - 1 black - 7 white - 1 black - 1 white - 1 black - 1 white - 1 black - 2 white - 1 black - 1 white - 1 black - 9 white
+47) 11 white - 1 black - 1 white - 1 black - 2 white - 1 black - 2 white - 1 black - 2 white - 1 black - 2 white - 1 black - 2 white - 1 black - 2 white - 1 black - 2 white - 6 black - 10 white
+48) 12 white - 7 black - 3 white - 1 black - 2 white - 1 black - 2 white - 1 black - 1 white - 1 black - 19 white
+49) 23 white - 7 black - 20 white
+50) 50 white

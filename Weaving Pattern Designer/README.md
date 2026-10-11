@@ -17,7 +17,7 @@ The preview repeats the pair A, B, A, B and so on, like bricks or a honeycomb.
         A   A   A   A
       B   B   B   B   B
 ```
-![screenshot](/Screenshot.jpg)
+
 
 
 

@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Skein – palettes from the threads you own</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#15171b;--panel:#1e2126;--panel2:#272b32;--ink:#eceef2;--ink2:#a3aab6;--line:#343944;--accent:#ff6f8e;--on-accent:#1b0a10;--shadow:0 6px 24px rgba(0,0,0,.35)}
+[data-theme=mid]{--bg:#7f858e;--panel:#8c929b;--panel2:#9ba1aa;--ink:#101218;--ink2:#262a33;--line:#656b75;--accent:#c92652;--on-accent:#fff;--shadow:0 6px 24px rgba(0,0,0,.22)}
+[data-theme=light]{--bg:#eceef1;--panel:#fff;--panel2:#f2f3f6;--ink:#14161b;--ink2:#566070;--line:#d6dae1;--accent:#cf2a58;--on-accent:#fff;--shadow:0 6px 24px rgba(20,30,50,.10)}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:500 16px/1.45 "Schibsted Grotesk",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;touch-action:manipulation;min-height:100vh}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+h1,h2,h3,p{margin:0}
+.wrap{max-width:1320px;margin:0 auto;padding:0 20px}
+/* header */
+.top{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--line)}
+.top .row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:12px 0}
+.brand{display:flex;align-items:baseline;gap:12px;margin-right:auto}
+.brand h1{font-size:30px;font-weight:800;letter-spacing:-.02em}
+.brand p{color:var(--ink2);font-size:14px}
+.btn{min-height:44px;padding:0 18px;border-radius:12px;border:1px solid var(--line);background:var(--panel);font-weight:600;display:inline-flex;align-items:center;gap:8px;justify-content:center}
+.btn:active{transform:translateY(1px)}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn.sm{min-height:38px;padding:0 12px;font-size:14px}
+.btn.ghost{background:transparent}
+.dirty{display:none;align-items:center;gap:8px;font-size:14px;font-weight:600}
+.dirty.on{display:inline-flex}
+.dirty i{width:10px;height:10px;border-radius:50%;background:var(--accent)}
+.themes{display:flex;gap:6px;padding:4px;border-radius:999px;background:var(--panel);border:1px solid var(--line)}
+.themes button{width:38px;height:38px;border-radius:50%;border:2px solid transparent}
+.themes button[aria-pressed=true]{border-color:var(--accent)}
+.themes [data-t=dark]{background:#15171b}.themes [data-t=mid]{background:#80868e}.themes [data-t=light]{background:#eceef1}
+.chips{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.chip{min-height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--line);background:var(--panel);font-weight:600}
+.chip[aria-pressed=true],.chip.sel{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chip small{opacity:.7;margin-left:4px;font-weight:500}
+.typebar{padding:0 0 12px}
+.typebar .lbl{color:var(--ink2);font-size:14px;margin-right:4px}
+.tabs{display:flex;gap:4px}
+.tabs button{min-height:46px;padding:0 20px;border:0;background:transparent;font-weight:700;color:var(--ink2);border-bottom:3px solid transparent}
+.tabs button[aria-selected=true]{color:var(--ink);border-bottom-color:var(--accent)}
+main{padding:22px 0 80px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px}
+.panel h2{font-size:18px;font-weight:700;margin-bottom:12px}
+.hint{color:var(--ink2);font-size:14px}
+.empty{padding:40px 24px;text-align:center}
+.empty h2{font-size:22px;margin-bottom:8px}
+.empty p{color:var(--ink2);max-width:46ch;margin:0 auto 18px}
+/* generate */
+.gen{display:grid;grid-template-columns:340px 1fr;gap:20px;align-items:start}
+@media(max-width:920px){.gen{grid-template-columns:1fr}}
+.ctrl{display:flex;flex-direction:column;gap:20px}
+.field>label,.field>.fl{display:block;font-weight:700;margin-bottom:8px}
+input[type=range]{width:100%;height:44px;accent-color:var(--accent)}
+.rangeline{display:flex;align-items:center;gap:12px}
+.rangeline output{min-width:28px;font-weight:800;font-size:22px;text-align:right}
+.seg{display:flex;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.seg button{flex:1;min-height:44px;border:0;background:var(--panel2);font-weight:600;font-size:14px;border-right:1px solid var(--line)}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
+.switch{display:flex;align-items:center;justify-content:space-between;min-height:44px;gap:12px}
+.switch input{appearance:none;width:52px;height:30px;border-radius:999px;background:var(--line);position:relative;transition:.15s;flex:none;border:0}
+.switch input::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:.15s}
+.switch input:checked{background:var(--accent)}
+.switch input:checked::after{left:25px}
+.bstrip{display:flex;flex-wrap:wrap;gap:8px;max-height:210px;overflow:auto;padding:2px}
+.btile{width:46px;height:46px;border-radius:12px;border:2px solid var(--line);padding:0;position:relative;overflow:hidden}
+.btile{user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.btile.ex::after{content:"";position:absolute;inset:0;z-index:2;background:
+ linear-gradient(to top right,transparent calc(50% - 2.5px),#e0173c calc(50% - 2.5px),#e0173c calc(50% + 2.5px),transparent calc(50% + 2.5px)),
+ linear-gradient(to bottom right,transparent calc(50% - 2.5px),#e0173c calc(50% - 2.5px),#e0173c calc(50% + 2.5px),transparent calc(50% + 2.5px)),
+ linear-gradient(to top right,transparent calc(50% - 4.5px),#fff calc(50% - 4.5px),#fff calc(50% + 4.5px),transparent calc(50% + 4.5px)),
+ linear-gradient(to bottom right,transparent calc(50% - 4.5px),#fff calc(50% - 4.5px),#fff calc(50% + 4.5px),transparent calc(50% + 4.5px))}
+.btile.ex{opacity:.75}
+.btile.rand{width:auto;padding:0 14px;background:var(--panel2);font-weight:700}
+.btile.sel{outline:3px solid var(--accent);outline-offset:1px}
+.go{width:100%;min-height:58px;font-size:18px;font-weight:800;border-radius:14px}
+/* palette cards */
+.hrow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.hrow .chip{padding:0 8px;white-space:normal;line-height:1.2;text-align:center}
+@media(max-width:520px){.hrow{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.results{display:flex;flex-direction:column;gap:20px;min-width:0}
+.pcard{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:var(--shadow)}
+.pcard>header{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;margin-bottom:14px}
+.pcard h3{font-size:20px;font-weight:800;letter-spacing:-.01em}
+.pcard .sub{color:var(--ink2);font-size:14px}
+.acts{display:flex;gap:8px;flex-wrap:wrap}
+.acts .on{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.bands{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:12px}
+@media(max-width:620px){.bands{grid-auto-flow:row;grid-auto-columns:auto}.band{height:90px!important}}
+.slot{margin:0;min-width:0}
+.band{position:relative;height:165px;border-radius:14px;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(0,0,0,.2)}
+.band::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(100deg,rgba(255,255,255,.14) 0 3px,rgba(0,0,0,.10) 3px 6px);mix-blend-mode:soft-light}
+.band::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.20),rgba(255,255,255,.18) 28%,rgba(255,255,255,0) 52%,rgba(0,0,0,.24))}
+.band.metal::after{background:linear-gradient(90deg,rgba(0,0,0,.2),rgba(255,255,255,.35) 22%,rgba(255,255,255,0) 38%,rgba(255,255,255,.28) 62%,rgba(0,0,0,.25))}
+.band .pin{position:absolute;left:50%;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 1.5px rgba(0,0,0,.6);z-index:2}
+.band .num{position:absolute;left:8px;bottom:8px;z-index:2;min-width:26px;height:26px;padding:0 7px;display:grid;place-items:center;font-size:13px;font-weight:800;border-radius:999px;background:rgba(0,0,0,.7);color:#fff}
+.band .tag{position:absolute;left:8px;top:8px;z-index:2;font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px;background:rgba(255,255,255,.88);color:#111}
+.slot figcaption{padding-top:10px;font-size:14px;line-height:1.35}
+.slot figcaption b{display:block;font-size:16px}
+.slot .nm{display:block;color:var(--ink2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.slot .q{display:block;font-size:13px;font-weight:600;margin-top:2px}
+.alts{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.alt{display:inline-flex;align-items:center;gap:5px;font-size:12px;padding:2px 8px 2px 3px;border-radius:999px;background:var(--panel2);border:1px solid var(--line)}
+.alt i{width:14px;height:14px;border-radius:50%;display:inline-block;box-shadow:inset 0 0 0 1px rgba(0,0,0,.25)}
+.note-line{margin-top:12px;font-size:14px;color:var(--ink2)}
+/* preview */
+.prevhead{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:12px}
+#svgHost{background:var(--panel2);border-radius:12px;padding:12px;display:flex;justify-content:center;min-height:120px}
+#svgHost svg{width:100%;height:auto;max-height:480px}
+/* stash */
+.stash{display:grid;grid-template-columns:1fr 1.15fr;gap:20px;align-items:start}
+@media(max-width:920px){.stash{grid-template-columns:1fr}}
+.typeadmin{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:20px}
+.typeadmin input[type=text]{flex:1 1 200px}
+input[type=text],input[type=search],select,textarea{min-height:44px;padding:8px 12px;border-radius:12px;border:1px solid var(--line);background:var(--panel2);width:100%}
+input[type=color]{width:56px;height:44px;padding:2px;border-radius:10px;border:1px solid var(--line);background:var(--panel2)}
+.ownedlist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;max-height:70vh;overflow:auto}
+.own{display:grid;grid-template-columns:54px 1fr 40px;gap:10px;align-items:center;padding:8px;border-radius:12px;background:var(--panel2);border:1px solid var(--line)}
+.own .sw{width:54px;height:54px;border-radius:10px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.25)}
+.own .meta b{margin-right:6px}
+.own .meta{min-width:0}
+.own input.note{margin-top:6px;min-height:38px;font-size:14px;background:var(--panel)}
+.own .x{width:40px;height:40px;border-radius:10px;border:1px solid var(--line);background:var(--panel)}
+.browsebar{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.browsebar .full{grid-column:1/-1}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px;max-height:60vh;overflow:auto;padding:2px}
+.tile{display:flex;flex-direction:column;gap:4px;padding:6px;border-radius:12px;border:2px solid var(--line);background:var(--panel2);text-align:left;position:relative;min-height:44px}
+.tile .sw{display:block;height:44px;border-radius:8px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.25)}
+.tile b{font-size:13px}
+.tile small{font-size:11.5px;line-height:1.2;color:var(--ink2);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.4em}
+.tile.on{border-color:var(--accent)}
+.tile.on::after{content:"✓";position:absolute;right:6px;top:6px;width:22px;height:22px;border-radius:50%;background:var(--accent);color:var(--on-accent);display:grid;place-items:center;font-size:13px;font-weight:800}
+details.cust{margin-top:14px;border-top:1px solid var(--line);padding-top:12px}
+details.cust summary{min-height:44px;display:flex;align-items:center;font-weight:700;cursor:pointer}
+.cform{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}
+.cform .full{grid-column:1/-1}
+.cform label{font-size:13px;font-weight:600;display:block;margin-bottom:4px}
+.colors{display:flex;gap:8px;flex-wrap:wrap}
+.chk{display:flex;align-items:center;gap:10px;min-height:44px}
+.chk input{width:22px;height:22px;accent-color:var(--accent)}
+.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(420px,1fr));gap:20px}
+@media(max-width:520px){.cgrid{grid-template-columns:1fr}}
+/* dialog + toast */
+dialog{border:1px solid var(--line);border-radius:16px;background:var(--panel);color:var(--ink);width:min(560px,92vw);padding:18px}
+dialog::backdrop{background:rgba(0,0,0,.55)}
+dialog textarea{min-height:260px;font:500 14px/1.5 ui-monospace,Menlo,Consolas,monospace;resize:vertical}
+dialog .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;justify-content:flex-end}
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);opacity:0;pointer-events:none;background:var(--ink);color:var(--bg);padding:12px 20px;border-radius:12px;font-weight:600;transition:.2s;z-index:50;max-width:90vw}
+#toast.on{opacity:1;transform:translateX(-50%)}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <div class="row">
+    <div class="brand"><h1>Skein</h1><p>Palettes from the threads you own</p></div>
+    <span class="dirty" id="dirty"><i></i>Unsaved changes</span>
+    <div class="themes" role="group" aria-label="Background"></div>
+    <button class="btn" data-act="load">Load stash</button>
+    <button class="btn" id="saveBtn" data-act="save">Save stash</button>
+    <input type="file" id="fileIn" accept=".json,application/json" hidden>
+    <input type="file" id="svgIn" accept=".svg,image/svg+xml" hidden>
+  </div>
+  <div class="row typebar"><div class="chips" id="typeChips"></div></div>
+  <nav class="tabs" role="tablist"></nav>
+</div></header>
+<main class="wrap" id="view"></main>
+<dialog id="dlg"><h2 id="dlgT" style="margin:0 0 10px;font-size:18px"></h2><textarea id="dlgTx" readonly></textarea>
+  <div class="row"><button class="btn" data-act="dlgCopy">Copy</button><button class="btn" data-act="dlgSave">Save .txt</button><button class="btn pri" data-act="dlgClose">Close</button></div></dialog>
+<div id="toast" role="status"></div>
+
+<script>
+const DMC={"solidColors":[{"id":"Ecru","name":"Ecru off-white","hex":"#FFF7E7","group":"Whites & Ecru"},{"id":"Blanc","name":"Blanc","hex":"#FCFCFF","group":"Whites & Ecru"},{"id":"White","name":"White","hex":"#FCFCFF","group":"Whites & Ecru"},{"id":"B5200","name":"Snow White","hex":"#FFFFFF","group":"Whites & Ecru"},{"id":"1","name":"White Tin","hex":"#EFEEF0","group":"Whites & Ecru"},{"id":"2","name":"Tin","hex":"#C5C4C9","group":"Whites & Ecru"},{"id":"3","name":"Tin - Medium","hex":"#B0B0B5","group":"Grays"},{"id":"4","name":"Tin - Dark","hex":"#9C9B9D","group":"Grays"},{"id":"5","name":"Driftwood - Light","hex":"#E3CCBE","group":"Browns & Tans"},{"id":"6","name":"Driftwood - Medium Light","hex":"#DCC6B8","group":"Browns & Tans"},{"id":"7","name":"Driftwood","hex":"#CCB8AA","group":"Browns & Tans"},{"id":"8","name":"Driftwood - Dark","hex":"#9D7D71","group":"Browns & Tans"},{"id":"9","name":"Cocoa - Very Dark","hex":"#552014","group":"Mauves & Antique"},{"id":"10","name":"Tender Green - Very Light","hex":"#EDFED9","group":"Greens"},{"id":"11","name":"Tender Green - Light","hex":"#E2EDB5","group":"Greens"},{"id":"12","name":"Tender Green","hex":"#CDD99A","group":"Greens"},{"id":"13","name":"Nile Green - Medium Light","hex":"#BFF6E0","group":"Teals & Turquoise"},{"id":"14","name":"Apple Green - Pale","hex":"#D0FBB2","group":"Greens"},{"id":"15","name":"Apple Green","hex":"#D1EDA4","group":"Greens"},{"id":"16","name":"Chartreuse - Light","hex":"#A4D67C","group":"Greens"},{"id":"17","name":"Yellow Plum - Light","hex":"#E5E272","group":"Yellows"},{"id":"18","name":"Yellow Plum","hex":"#D9D56D","group":"Yellows"},{"id":"19","name":"Autumn Gold - Medium Light","hex":"#F7C95F","group":"Oranges"},{"id":"20","name":"Shrimp","hex":"#F7AF93","group":"Corals & Salmons"},{"id":"21","name":"Alizarian - Light","hex":"#D79982","group":"Oranges"},{"id":"22","name":"Alizarian","hex":"#BC604E","group":"Oranges"},{"id":"23","name":"Apple Blossom","hex":"#EDE2ED","group":"Whites & Ecru"},{"id":"24","name":"White Lavender","hex":"#E0D7EE","group":"Whites & Ecru"},{"id":"25","name":"Lavender - Ultra Light","hex":"#DAD2E9","group":"Lavenders"},{"id":"26","name":"Lavender - Pale","hex":"#CFC8DE","group":"Lavenders"},{"id":"27","name":"White Violet","hex":"#E9ECFC","group":"Whites & Ecru"},{"id":"28","name":"Eggplant - Medium Light","hex":"#7D4E92","group":"Purples & Violets"},{"id":"29","name":"Eggplant","hex":"#674076","group":"Purples & Violets"},{"id":"30","name":"Blueberry - Medium Light","hex":"#6D54D3","group":"Purples & Violets"},{"id":"31","name":"Blueberry","hex":"#5834A3","group":"Purples & Violets"},{"id":"32","name":"Blueberry - Dark","hex":"#4D2E8A","group":"Purples & Violets"},{"id":"33","name":"Fuchsia","hex":"#D9539F","group":"Purples & Violets"},{"id":"34","name":"Fuchsia - Dark","hex":"#AE4280","group":"Purples & Violets"},{"id":"35","name":"Fuchsia - Very Dark","hex":"#732B55","group":"Purples & Violets"},{"id":"150","name":"Red - Bright","hex":"#CF0053","group":"Reds"},{"id":"151","name":"Pink","hex":"#FFCBD7","group":"Pinks & Roses"},{"id":"152","name":"Tawny - Dark","hex":"#E1A1A1","group":"Mauves & Antique"},{"id":"153","name":"Lilac","hex":"#EAC5EB","group":"Purples & Violets"},{"id":"154","name":"Red - Very Dark","hex":"#4B233A","group":"Reds"},{"id":"155","name":"Forget-me-not Blue","hex":"#9774B6","group":"Blues"},{"id":"156","name":"Blue - Medium","hex":"#8577B4","group":"Blues"},{"id":"157","name":"Blue - Light","hex":"#B5B8EA","group":"Blues"},{"id":"158","name":"Blue - Dark","hex":"#393068","group":"Blues"},{"id":"159","name":"Petrol Blue - Light","hex":"#BCB5DE","group":"Blues"},{"id":"160","name":"Petrol Blue - Medium","hex":"#8178A9","group":"Blues"},{"id":"161","name":"Petrol Blue - Dark","hex":"#60568B","group":"Blues"},{"id":"162","name":"Baby Blue - Light","hex":"#CAE7F0","group":"Blues"},{"id":"163","name":"Green","hex":"#557A60","group":"Greens"},{"id":"164","name":"Green - Light","hex":"#BAE4B6","group":"Greens"},{"id":"165","name":"Green - Bright","hex":"#E1F477","group":"Greens"},{"id":"166","name":"Lime Green","hex":"#ADC238","group":"Greens"},{"id":"167","name":"Khaki Brown","hex":"#855D31","group":"Browns & Tans"},{"id":"168","name":"Silver Gray","hex":"#B1AEB7","group":"Grays"},{"id":"169","name":"Pewter Gray","hex":"#827D7D","group":"Grays"},{"id":"208","name":"Lavender - Very Dark","hex":"#9442A7","group":"Lavenders"},{"id":"209","name":"Lavender - Dark","hex":"#BA72C6","group":"Lavenders"},{"id":"210","name":"Lavender - Medium","hex":"#D49FE1","group":"Lavenders"},{"id":"211","name":"Lavender - Light","hex":"#E5BDED","group":"Lavenders"},{"id":"221","name":"Shell Pink - Very Dark","hex":"#792631","group":"Pinks & Roses"},{"id":"223","name":"Shell Pink - Light","hex":"#BB6864","group":"Pinks & Roses"},{"id":"224","name":"Shell Pink - Very Light","hex":"#E2A598","group":"Pinks & Roses"},{"id":"225","name":"Shell Pink - Ultra Very Light","hex":"#F8D9CD","group":"Pinks & Roses"},{"id":"300","name":"Mahogany - Very Dark","hex":"#6C3116","group":"Browns & Tans"},{"id":"301","name":"Mahogany - Medium","hex":"#AA5237","group":"Browns & Tans"},{"id":"304","name":"Red - Medium","hex":"#A10C39","group":"Reds"},{"id":"307","name":"Lemon","hex":"#FDE949","group":"Yellows"},{"id":"309","name":"Rose - Dark","hex":"#BA2044","group":"Pinks & Roses"},{"id":"310","name":"Black","hex":"#000000","group":"Blacks"},{"id":"311","name":"Blue - Medium","hex":"#002A64","group":"Blues"},{"id":"312","name":"Baby Blue - Very Dark","hex":"#1F3279","group":"Blues"},{"id":"315","name":"Antique Mauve - Medium Dark","hex":"#7D4246","group":"Mauves & Antique"},{"id":"316","name":"Antique Mauve - Medium","hex":"#BC757F","group":"Mauves & Antique"},{"id":"317","name":"Pewter Gray","hex":"#6D6469","group":"Grays"},{"id":"318","name":"Steel Gray - Light","hex":"#999B9D","group":"Grays"},{"id":"319","name":"Pistachio Green - Very Dark","hex":"#3A553B","group":"Greens"},{"id":"320","name":"Pistachio Green - Medium","hex":"#608C59","group":"Greens"},{"id":"321","name":"Red","hex":"#BD1136","group":"Reds"},{"id":"322","name":"Baby Blue","hex":"#3A609D","group":"Blues"},{"id":"326","name":"Rose - Very Dark","hex":"#AC1C37","group":"Pinks & Roses"},{"id":"327","name":"Violet","hex":"#5E0F77","group":"Purples & Violets"},{"id":"333","name":"Blue Violet - Very Dark","hex":"#6E2E9B","group":"Purples & Violets"},{"id":"334","name":"Baby Blue - Medium","hex":"#6085B8","group":"Blues"},{"id":"335","name":"Rose","hex":"#D63D57","group":"Reds"},{"id":"336","name":"Blue","hex":"#0C275E","group":"Blues"},{"id":"340","name":"Blue Violet - Medium","hex":"#996DC3","group":"Purples & Violets"},{"id":"341","name":"Blue Violet - Light","hex":"#A39AD7","group":"Purples & Violets"},{"id":"347","name":"Salmon - Very Dark","hex":"#AB1B33","group":"Corals & Salmons"},{"id":"349","name":"Coral - Dark","hex":"#C62C38","group":"Corals & Salmons"},{"id":"350","name":"Coral - Medium","hex":"#DE3F40","group":"Corals & Salmons"},{"id":"351","name":"Coral","hex":"#ED625B","group":"Corals & Salmons"},{"id":"352","name":"Coral - Light","hex":"#F78372","group":"Corals & Salmons"},{"id":"353","name":"Peach","hex":"#FDB4A1","group":"Corals & Salmons"},{"id":"355","name":"Terra Cotta - Dark","hex":"#97382B","group":"Corals & Salmons"},{"id":"356","name":"Terra Cotta - Medium","hex":"#BE5C4B","group":"Corals & Salmons"},{"id":"367","name":"Pistachio Green - Dark","hex":"#446B45","group":"Greens"},{"id":"368","name":"Pistachio Green - Light","hex":"#7FC66D","group":"Greens"},{"id":"369","name":"Pistachio Green - Very Light","hex":"#CDEFA6","group":"Greens"},{"id":"370","name":"Mustard - Medium","hex":"#917245","group":"Browns & Tans"},{"id":"371","name":"Mustard","hex":"#9F8352","group":"Browns & Tans"},{"id":"372","name":"Mustard - Light","hex":"#AD9564","group":"Browns & Tans"},{"id":"400","name":"Mahogany - Dark","hex":"#813718","group":"Browns & Tans"},{"id":"402","name":"Mahogany - Very Light","hex":"#EF9E74","group":"Browns & Tans"},{"id":"407","name":"Desert Sand - Dark","hex":"#B77159","group":"Corals & Salmons"},{"id":"413","name":"Pewter Gray - Dark","hex":"#4A4749","group":"Grays"},{"id":"414","name":"Steel Gray - Dark","hex":"#766E72","group":"Grays"},{"id":"415","name":"Pearl Gray","hex":"#B8B9BD","group":"Grays"},{"id":"420","name":"Hazelnut Brown - Dark","hex":"#855A30","group":"Browns & Tans"},{"id":"422","name":"Hazelnut Brown - Light","hex":"#C99A67","group":"Browns & Tans"},{"id":"433","name":"Brown - Medium","hex":"#73421E","group":"Browns & Tans"},{"id":"434","name":"Brown - Light","hex":"#8F5332","group":"Browns & Tans"},{"id":"435","name":"Brown - Very Light","hex":"#A96538","group":"Browns & Tans"},{"id":"436","name":"Tan","hex":"#C78559","group":"Browns & Tans"},{"id":"437","name":"Tan - Light","hex":"#DAA26F","group":"Browns & Tans"},{"id":"444","name":"Lemon - Dark","hex":"#F5BC13","group":"Yellows"},{"id":"445","name":"Lemon - Light","hex":"#FCF999","group":"Yellows"},{"id":"451","name":"Shell Gray - Dark","hex":"#887773","group":"Grays"},{"id":"452","name":"Shell Gray - Medium","hex":"#AD9994","group":"Grays"},{"id":"453","name":"Shell Gray - Light","hex":"#CCB8AA","group":"Grays"},{"id":"469","name":"Avocado Green","hex":"#5B6533","group":"Greens"},{"id":"470","name":"Avocado Green - Light","hex":"#72813E","group":"Greens"},{"id":"471","name":"Avocado Green - Very Light","hex":"#9EB357","group":"Greens"},{"id":"472","name":"Avocado Green - Ultra Light","hex":"#D1DE75","group":"Greens"},{"id":"498","name":"Red - Dark","hex":"#970B2C","group":"Reds"},{"id":"500","name":"Blue Green - Very Dark","hex":"#1D362A","group":"Blues"},{"id":"501","name":"Blue Green - Dark","hex":"#2F5446","group":"Blues"},{"id":"502","name":"Blue Green","hex":"#57826E","group":"Blues"},{"id":"503","name":"Blue Green - Medium","hex":"#89B89F","group":"Blues"},{"id":"504*","name":"504*","hex":"#ACDAC1","group":"Greens"},{"id":"505","name":"Grass Green - Dark","hex":"#338362","group":"Greens"},{"id":"517","name":"Wedgewood - Dark","hex":"#216285","group":"Teals & Turquoise"},{"id":"518","name":"Wedgewood - Light","hex":"#50819C","group":"Teals & Turquoise"},{"id":"519","name":"Sky Blue","hex":"#94B7CB","group":"Blues"},{"id":"520","name":"Fern Green - Dark","hex":"#384526","group":"Greens"},{"id":"522","name":"Fern Green","hex":"#808B6E","group":"Greens"},{"id":"523","name":"Fern Green - Light","hex":"#959F7A","group":"Greens"},{"id":"524","name":"Fern Green - Very Light","hex":"#AEA78E","group":"Greens"},{"id":"535","name":"Ash Gray - Very Light","hex":"#4B4B49","group":"Grays"},{"id":"543","name":"Beige Brown - Ultra Very Light","hex":"#EAD0B5","group":"Browns & Tans"},{"id":"550","name":"Violet - Very Dark","hex":"#580E5C","group":"Purples & Violets"},{"id":"552","name":"Violet - Medium","hex":"#902F99","group":"Purples & Violets"},{"id":"553","name":"Violet","hex":"#A449AC","group":"Purples & Violets"},{"id":"554","name":"Violet - Light","hex":"#DC9CDE","group":"Purples & Violets"},{"id":"561","name":"Jade - Very Dark","hex":"#285E48","group":"Teals & Turquoise"},{"id":"562","name":"Jade - Medium","hex":"#3B8C5A","group":"Teals & Turquoise"},{"id":"563","name":"Jade - Light","hex":"#6ED39A","group":"Teals & Turquoise"},{"id":"564","name":"Jade - Very Light","hex":"#95E4AF","group":"Teals & Turquoise"},{"id":"580","name":"Moss Green - Dark","hex":"#355F0B","group":"Greens"},{"id":"581","name":"Moss Green","hex":"#838A29","group":"Greens"},{"id":"597","name":"Turquoise","hex":"#52ADAB","group":"Teals & Turquoise"},{"id":"598","name":"Turquoise - Light","hex":"#97D8D3","group":"Teals & Turquoise"},{"id":"600","name":"Cranberry - Very Dark","hex":"#BF1C48","group":"Reds"},{"id":"601","name":"Cranberry - Dark","hex":"#C62A53","group":"Reds"},{"id":"602","name":"Cranberry - Medium","hex":"#D63F68","group":"Reds"},{"id":"603","name":"Cranberry - Light Medium","hex":"#FB4B7C","group":"Reds"},{"id":"604","name":"Cranberry - Light","hex":"#F793B2","group":"Reds"},{"id":"605","name":"Cranberry - Very Light","hex":"#FBACC4","group":"Reds"},{"id":"606","name":"Orange-red - Bright","hex":"#F70F00","group":"Reds"},{"id":"608","name":"Orange - Bright","hex":"#FD480C","group":"Oranges"},{"id":"610","name":"Drab Brown - Dark","hex":"#6B5039","group":"Browns & Tans"},{"id":"611","name":"Drab Brown","hex":"#7C5F46","group":"Browns & Tans"},{"id":"612","name":"Drab Brown - Light","hex":"#A6885E","group":"Browns & Tans"},{"id":"613","name":"Drab Brown - Very Light","hex":"#B99F72","group":"Browns & Tans"},{"id":"632","name":"Desert Sand - Ultra Very Dark","hex":"#7F4232","group":"Corals & Salmons"},{"id":"640","name":"Beige Gray - Very Dark","hex":"#817868","group":"Grays"},{"id":"642","name":"Beige Gray - Dark","hex":"#958D79","group":"Grays"},{"id":"644","name":"Beige Gray - Medium","hex":"#C4BEA6","group":"Grays"},{"id":"645","name":"Beaver Gray - Very Dark","hex":"#5D5D54","group":"Grays"},{"id":"646","name":"Beaver Gray - Dark","hex":"#6B6860","group":"Grays"},{"id":"647","name":"Beaver Gray - Medium","hex":"#908E85","group":"Grays"},{"id":"648","name":"Beaver Gray - Light","hex":"#A7A69F","group":"Grays"},{"id":"666","name":"Red - Bright","hex":"#CE1B33","group":"Reds"},{"id":"676","name":"Old Gold - Light","hex":"#ECBF7D","group":"Golds & Straws"},{"id":"677","name":"Old Gold - Very Light","hex":"#F2DC9F","group":"Golds & Straws"},{"id":"680","name":"Old Gold - Dark","hex":"#B07B46","group":"Golds & Straws"},{"id":"699","name":"Green","hex":"#075B26","group":"Greens"},{"id":"700","name":"Green - Bright","hex":"#076C34","group":"Greens"},{"id":"701","name":"Green - Light","hex":"#217C36","group":"Greens"},{"id":"702","name":"Kelly Green","hex":"#379130","group":"Greens"},{"id":"703","name":"Chartreuse","hex":"#63B330","group":"Greens"},{"id":"704","name":"Chartreuse - Bright","hex":"#88C53A","group":"Greens"},{"id":"712","name":"Cream","hex":"#F6EFDA","group":"Whites & Ecru"},{"id":"718","name":"Plum","hex":"#CB2089","group":"Purples & Violets"},{"id":"720","name":"Orange Spice - Dark","hex":"#C83A24","group":"Oranges"},{"id":"721","name":"Orange Spice - Medium","hex":"#F46440","group":"Oranges"},{"id":"722","name":"Orange Spice - Light","hex":"#F98756","group":"Oranges"},{"id":"724","name":"Winnie The Pooh Gold","hex":"#F9D039","group":"Yellows"},{"id":"725","name":"Topaz","hex":"#F9C15B","group":"Golds & Straws"},{"id":"726","name":"Topaz - Light","hex":"#FDDB63","group":"Golds & Straws"},{"id":"727","name":"Topaz - Very Light","hex":"#FDE98B","group":"Golds & Straws"},{"id":"728","name":"Golden Yellow","hex":"#F2AE3F","group":"Yellows"},{"id":"729","name":"Old Gold - Medium","hex":"#CE9657","group":"Golds & Straws"},{"id":"730","name":"Olive Green - Very Dark","hex":"#63520B","group":"Greens"},{"id":"731*","name":"731*","hex":"#6B580B","group":"Yellows"},{"id":"732","name":"Olive Green","hex":"#725C0C","group":"Greens"},{"id":"733","name":"Olive Green - Medium","hex":"#A78A44","group":"Greens"},{"id":"734","name":"Olive Green - Light","hex":"#BB9C54","group":"Greens"},{"id":"738","name":"Tan - Very Light","hex":"#E2B783","group":"Browns & Tans"},{"id":"739","name":"Tan - Ultra Very Light","hex":"#F2DEB9","group":"Browns & Tans"},{"id":"740","name":"Tangerine","hex":"#FD6F1A","group":"Oranges"},{"id":"741","name":"Tangerine - Medium","hex":"#FC8B10","group":"Oranges"},{"id":"742","name":"Tangerine - Light","hex":"#FDAE3C","group":"Oranges"},{"id":"743","name":"Yellow - Medium","hex":"#FDD769","group":"Yellows"},{"id":"744","name":"Yellow - Pale","hex":"#FEE88D","group":"Yellows"},{"id":"745","name":"Yellow - Light Pale","hex":"#FEEBA5","group":"Yellows"},{"id":"746","name":"Off White","hex":"#FAF2D5","group":"Whites & Ecru"},{"id":"747","name":"Sky Blue - Very Light","hex":"#CEE9EA","group":"Blues"},{"id":"754","name":"Peach - Light","hex":"#F7C9B0","group":"Corals & Salmons"},{"id":"758","name":"Terra Cotta - Very Light","hex":"#E99F83","group":"Corals & Salmons"},{"id":"760","name":"Salmon","hex":"#EC8880","group":"Corals & Salmons"},{"id":"761","name":"Salmon - Light","hex":"#F8B4AD","group":"Corals & Salmons"},{"id":"762","name":"Pearl Gray - Very Light","hex":"#D1D0D2","group":"Grays"},{"id":"772","name":"Yellow Green - Very Light","hex":"#D7EFA7","group":"Yellows"},{"id":"775","name":"Baby Blue - Very Light","hex":"#D4E3EF","group":"Blues"},{"id":"776*","name":"776*","hex":"#FCA8AD","group":"Reds"},{"id":"777","name":"Red - Deep","hex":"#9B0042","group":"Reds"},{"id":"778","name":"Antique Mauve - Very Light","hex":"#DCA6A4","group":"Mauves & Antique"},{"id":"779","name":"Brown","hex":"#53332D","group":"Browns & Tans"},{"id":"780","name":"Topaz - Ultra Very Dark","hex":"#945026","group":"Golds & Straws"},{"id":"781*","name":"781*","hex":"#A25F1F","group":"Oranges"},{"id":"782","name":"Topaz - Dark","hex":"#B26923","group":"Golds & Straws"},{"id":"783","name":"Topaz - Medium","hex":"#D0883D","group":"Golds & Straws"},{"id":"791","name":"Cornflower Blue - Very Dark","hex":"#2D2068","group":"Blues"},{"id":"792","name":"Cornflower Blue - Dark","hex":"#454B8B","group":"Blues"},{"id":"793","name":"Cornflower Blue - Medium","hex":"#7C82B5","group":"Blues"},{"id":"794","name":"Cornflower Blue - Light","hex":"#A0B2D7","group":"Blues"},{"id":"796","name":"Royal Blue - Dark","hex":"#272276","group":"Blues"},{"id":"797","name":"Royal Blue","hex":"#2B3288","group":"Blues"},{"id":"798","name":"Delft Blue - Dark","hex":"#4E5CA7","group":"Blues"},{"id":"799","name":"Delft Blue - Medium","hex":"#6B7FC0","group":"Blues"},{"id":"800","name":"Delft Blue - Pale","hex":"#B5C7E9","group":"Blues"},{"id":"801","name":"Coffee Brown - Dark","hex":"#60391D","group":"Browns & Tans"},{"id":"803","name":"Blue - Deep","hex":"#202754","group":"Blues"},{"id":"806*","name":"806*","hex":"#1D6C87","group":"Blues"},{"id":"807","name":"Peacock Blue","hex":"#558B9E","group":"Blues"},{"id":"809","name":"Delft Blue","hex":"#919FD5","group":"Blues"},{"id":"813","name":"Blue - Light","hex":"#7FA0C6","group":"Blues"},{"id":"814","name":"Garnet - Dark","hex":"#711033","group":"Reds"},{"id":"815","name":"Garnet - Medium","hex":"#800B34","group":"Reds"},{"id":"816","name":"Garnet","hex":"#921238","group":"Reds"},{"id":"817","name":"Coral Red - Very Dark","hex":"#BB1630","group":"Reds"},{"id":"818","name":"Baby Pink","hex":"#FEDEDD","group":"Pinks & Roses"},{"id":"819","name":"Baby Pink - Light","hex":"#FCEBDE","group":"Pinks & Roses"},{"id":"820","name":"Royal Blue - Very Dark","hex":"#151264","group":"Blues"},{"id":"822","name":"Beige Gray - Light","hex":"#E8DFC7","group":"Grays"},{"id":"823","name":"Blue - Dark","hex":"#000B44","group":"Blues"},{"id":"824","name":"Blue - Very Dark","hex":"#284779","group":"Blues"},{"id":"825","name":"Blue - Dark","hex":"#34588F","group":"Blues"},{"id":"826","name":"Blue - Medium","hex":"#5075A7","group":"Blues"},{"id":"827","name":"Blue - Very Light","hex":"#A4C1DE","group":"Blues"},{"id":"828","name":"Blue - Ultra Very Light","hex":"#C3D7E6","group":"Blues"},{"id":"829","name":"Golden Olive - Very Dark","hex":"#64480C","group":"Golds & Straws"},{"id":"830","name":"Golden Olive - Dark","hex":"#6E501D","group":"Golds & Straws"},{"id":"831","name":"Golden Olive - Medium","hex":"#7C5F20","group":"Golds & Straws"},{"id":"832","name":"Golden Olive","hex":"#9C7230","group":"Golds & Straws"},{"id":"833","name":"Golden Olive - Light","hex":"#B99956","group":"Golds & Straws"},{"id":"834","name":"Golden Olive - Very Light","hex":"#D2B468","group":"Golds & Straws"},{"id":"838","name":"Beige Brown - Very Dark","hex":"#4A3021","group":"Browns & Tans"},{"id":"839","name":"Beige Brown - Dark","hex":"#5A3C2D","group":"Browns & Tans"},{"id":"840","name":"Beige Brown - Medium","hex":"#7A5939","group":"Browns & Tans"},{"id":"841","name":"Beige Brown - Light","hex":"#A37D64","group":"Browns & Tans"},{"id":"842","name":"Beige Brown - Very Light","hex":"#CBB094","group":"Browns & Tans"},{"id":"844","name":"Beaver Gray - Ultra Dark","hex":"#494842","group":"Grays"},{"id":"868*","name":"868*","hex":"#995C30","group":"Oranges"},{"id":"869","name":"Hazelnut Brown - Very Dark","hex":"#784C28","group":"Browns & Tans"},{"id":"890","name":"Pistachio Green - Ultra Dark","hex":"#324233","group":"Greens"},{"id":"891","name":"Carnation - Dark","hex":"#EE3246","group":"Reds"},{"id":"892","name":"Carnation - Medium","hex":"#F44753","group":"Reds"},{"id":"893","name":"Carnation - Light","hex":"#F66879","group":"Reds"},{"id":"894","name":"Carnation - Very Light","hex":"#FD95A3","group":"Reds"},{"id":"895","name":"Hunter Green - Very Dark","hex":"#344B2E","group":"Greens"},{"id":"898","name":"Coffee Brown - Very Dark","hex":"#532F1B","group":"Browns & Tans"},{"id":"899","name":"Rose - Medium","hex":"#EA6B78","group":"Pinks & Roses"},{"id":"900","name":"Burnt Orange - Dark","hex":"#C63117","group":"Oranges"},{"id":"902","name":"Garnet - Very Dark","hex":"#651329","group":"Reds"},{"id":"904","name":"Parrot Green - Very Dark","hex":"#386324","group":"Greens"},{"id":"905","name":"Parrot Green - Dark","hex":"#467924","group":"Greens"},{"id":"906","name":"Parrot Green - Medium","hex":"#6C9E29","group":"Greens"},{"id":"907","name":"Parrot Green - Light","hex":"#9DC72D","group":"Greens"},{"id":"909","name":"Emerald Green - Very Dark","hex":"#106B43","group":"Greens"},{"id":"910","name":"Emerald Green - Dark","hex":"#10814E","group":"Greens"},{"id":"911","name":"Emerald Green - Medium","hex":"#109256","group":"Greens"},{"id":"912","name":"Emerald Green - Light","hex":"#36B26B","group":"Greens"},{"id":"913","name":"Nile Green - Medium","hex":"#55CA7D","group":"Teals & Turquoise"},{"id":"915","name":"Plum - Dark","hex":"#95085A","group":"Purples & Violets"},{"id":"917","name":"Plum - Medium","hex":"#AC1071","group":"Purples & Violets"},{"id":"918","name":"Red Copper - Dark","hex":"#883630","group":"Reds"},{"id":"919","name":"Red Copper","hex":"#9B371B","group":"Reds"},{"id":"920","name":"Copper - Medium","hex":"#AB4836","group":"Reds"},{"id":"921","name":"Copper","hex":"#C0573D","group":"Reds"},{"id":"922","name":"Copper - Light","hex":"#DD6E4C","group":"Reds"},{"id":"924","name":"Gray Green - Very Dark","hex":"#384A4A","group":"Grays"},{"id":"926","name":"Gray Green - Medium","hex":"#617674","group":"Grays"},{"id":"927","name":"Gray Green - Light","hex":"#9FA8A5","group":"Grays"},{"id":"928","name":"Gray Green - Very Light","hex":"#C0C6C0","group":"Grays"},{"id":"930","name":"Antique Blue - Dark","hex":"#495C6B","group":"Mauves & Antique"},{"id":"931","name":"Antique Blue - Medium","hex":"#667684","group":"Mauves & Antique"},{"id":"932","name":"Antique Blue - Light","hex":"#93A0AF","group":"Mauves & Antique"},{"id":"934","name":"Avocado Green - BLACK","hex":"#323324","group":"Blacks"},{"id":"935","name":"Avocado Green - Dark","hex":"#383A2A","group":"Greens"},{"id":"936","name":"Avocado Green - Very Dark","hex":"#3F4227","group":"Greens"},{"id":"937","name":"Avocado Green - Medium","hex":"#434F2C","group":"Greens"},{"id":"938","name":"Coffee Brown - Ultra Dark","hex":"#45271A","group":"Browns & Tans"},{"id":"939","name":"Blue - Very Dark","hex":"#09092F","group":"Blues"},{"id":"943","name":"Aquamarine - Medium","hex":"#009A77","group":"Teals & Turquoise"},{"id":"945","name":"Tawny","hex":"#F6C19A","group":"Mauves & Antique"},{"id":"946","name":"Burnt Orange - Medium","hex":"#ED4115","group":"Oranges"},{"id":"947","name":"Burnt Orange","hex":"#FC4F16","group":"Oranges"},{"id":"948","name":"Peach - Very Light","hex":"#FDE6D3","group":"Corals & Salmons"},{"id":"950","name":"Desert Sand - Light","hex":"#E5AC8D","group":"Corals & Salmons"},{"id":"951","name":"Tawny - Light","hex":"#FADDB6","group":"Mauves & Antique"},{"id":"954","name":"Nile Green","hex":"#6FDA8A","group":"Teals & Turquoise"},{"id":"955","name":"Nile Green - Light","hex":"#A8EBAD","group":"Teals & Turquoise"},{"id":"956","name":"Geranium","hex":"#F7566D","group":"Reds"},{"id":"957","name":"Geranium - Pale","hex":"#FD99AF","group":"Reds"},{"id":"958","name":"Seagreen - Dark","hex":"#0DB294","group":"Teals & Turquoise"},{"id":"959","name":"Seagreen - Medium","hex":"#72D0B7","group":"Teals & Turquoise"},{"id":"961","name":"Dusty Rose - Dark","hex":"#DE586C","group":"Pinks & Roses"},{"id":"962","name":"Dusty Rose - Medium","hex":"#EB7183","group":"Pinks & Roses"},{"id":"963","name":"Dusty Rose - Ultra Very Light","hex":"#FDCCD1","group":"Pinks & Roses"},{"id":"964","name":"Seagreen - Light","hex":"#A5E4D4","group":"Teals & Turquoise"},{"id":"966","name":"Baby Green - Medium","hex":"#94D28A","group":"Greens"},{"id":"967","name":"Peach - Light","hex":"#FFC2AC","group":"Corals & Salmons"},{"id":"970","name":"Pumpkin - Light","hex":"#FB6721","group":"Oranges"},{"id":"971*","name":"971*","hex":"#FC670D","group":"Corals & Salmons"},{"id":"972","name":"Canary - Deep","hex":"#FB9F11","group":"Yellows"},{"id":"973","name":"Canary - Bright","hex":"#FCCD2D","group":"Yellows"},{"id":"974","name":"Winnie The Pooh Gold 2","hex":"#F9C739","group":"Yellows"},{"id":"975","name":"Golden Brown - Dark","hex":"#813C11","group":"Golds & Straws"},{"id":"976","name":"Golden Brown - Medium","hex":"#CF7532","group":"Golds & Straws"},{"id":"977","name":"Golden Brown - Light","hex":"#EC8F43","group":"Golds & Straws"},{"id":"986","name":"Forest Green - Very Dark","hex":"#2E5230","group":"Greens"},{"id":"987","name":"Forest Green - Dark","hex":"#436838","group":"Greens"},{"id":"988","name":"Forest Green - Medium","hex":"#66924A","group":"Greens"},{"id":"989","name":"Forest Green","hex":"#71A74E","group":"Greens"},{"id":"991","name":"Aquamarine - Dark","hex":"#135F55","group":"Teals & Turquoise"},{"id":"992","name":"Aquamarine - Light","hex":"#42B59E","group":"Teals & Turquoise"},{"id":"993","name":"Aquamarine - Very Light","hex":"#62D8B6","group":"Teals & Turquoise"},{"id":"995","name":"Electric Blue - Dark","hex":"#0061B0","group":"Blues"},{"id":"996","name":"Electric Blue - Medium","hex":"#49A8EB","group":"Blues"},{"id":"3011","name":"Khaki Green - Dark","hex":"#655935","group":"Greens"},{"id":"3012","name":"Khaki Green - Medium","hex":"#8B7B4E","group":"Greens"},{"id":"3013","name":"Khaki Green - Light","hex":"#AFA97B","group":"Greens"},{"id":"3021","name":"Brown Gray - Very Dark","hex":"#50403B","group":"Grays"},{"id":"3022","name":"Brown Gray - Medium","hex":"#848274","group":"Grays"},{"id":"3023","name":"Brown Gray - Light","hex":"#A29B86","group":"Grays"},{"id":"3024","name":"Brown Gray - Very Light","hex":"#BEB8AC","group":"Grays"},{"id":"3031","name":"Mocha Brown - Very Dark","hex":"#423014","group":"Browns & Tans"},{"id":"3032","name":"Mocha Brown - Medium","hex":"#9D8868","group":"Browns & Tans"},{"id":"3033","name":"Mocha Brown - Very Light","hex":"#DBC7AD","group":"Browns & Tans"},{"id":"3041","name":"Antique Violet - Medium","hex":"#866A76","group":"Mauves & Antique"},{"id":"3042","name":"Antique Violet - Light","hex":"#AF98A0","group":"Mauves & Antique"},{"id":"3045","name":"Yellow Beige - Dark","hex":"#AF8152","group":"Yellows"},{"id":"3046","name":"Yellow Beige - Medium","hex":"#CEB074","group":"Yellows"},{"id":"3047","name":"Yellow Beige - Light","hex":"#EAD8AB","group":"Yellows"},{"id":"3051","name":"Green Gray - Dark","hex":"#4C4C1E","group":"Grays"},{"id":"3052","name":"Green Gray - Medium","hex":"#787E5C","group":"Grays"},{"id":"3053","name":"Green Gray","hex":"#999D75","group":"Grays"},{"id":"3064","name":"Desert Sand","hex":"#BA7056","group":"Corals & Salmons"},{"id":"3072","name":"Beaver Gray - Very Light","hex":"#D2D2CA","group":"Grays"},{"id":"3078","name":"Golden Yellow - Very Light","hex":"#FCF6B6","group":"Yellows"},{"id":"3325","name":"Baby Blue - Light","hex":"#ADCDE7","group":"Blues"},{"id":"3326","name":"Rose - Light","hex":"#F9979C","group":"Pinks & Roses"},{"id":"3328","name":"Salmon - Dark","hex":"#BE444A","group":"Corals & Salmons"},{"id":"3340","name":"Apricot - Medium","hex":"#FD6B4F","group":"Corals & Salmons"},{"id":"3341","name":"Apricot","hex":"#FD8E78","group":"Corals & Salmons"},{"id":"3345","name":"Hunter Green - Dark","hex":"#40552E","group":"Greens"},{"id":"3346","name":"Hunter Green","hex":"#56743B","group":"Greens"},{"id":"3347","name":"Yellow Green - Medium","hex":"#6D9646","group":"Yellows"},{"id":"3348","name":"Yellow Green - Light","hex":"#BEDF74","group":"Yellows"},{"id":"3350","name":"Dusty Rose - Ultra Dark","hex":"#AA3949","group":"Pinks & Roses"},{"id":"3354","name":"Dusty Rose - Light","hex":"#EFA5AC","group":"Pinks & Roses"},{"id":"3362","name":"Pine Green - Dark","hex":"#49523C","group":"Greens"},{"id":"3363","name":"Pine Green - Medium","hex":"#617451","group":"Greens"},{"id":"3364","name":"Pine Green","hex":"#8E9B6D","group":"Greens"},{"id":"3371","name":"Black Brown","hex":"#36220E","group":"Blacks"},{"id":"3607","name":"Plum - Light","hex":"#D94C9D","group":"Purples & Violets"},{"id":"3608","name":"Plum - Very Light","hex":"#EC81BE","group":"Purples & Violets"},{"id":"3609","name":"Plum - Ultra Light","hex":"#F6B0DF","group":"Purples & Violets"},{"id":"3684*","name":"3684*","hex":"#4C1329","group":"Reds"},{"id":"3685","name":"Mauve - Very Dark","hex":"#79263B","group":"Mauves & Antique"},{"id":"3687","name":"Mauve","hex":"#B5455D","group":"Mauves & Antique"},{"id":"3688","name":"Mauve - Medium","hex":"#DC7C86","group":"Mauves & Antique"},{"id":"3689","name":"Mauve - Light","hex":"#F8BBC8","group":"Mauves & Antique"},{"id":"3705","name":"Melon - Dark","hex":"#F2494F","group":"Pinks & Roses"},{"id":"3706","name":"Melon - Medium","hex":"#FD6E70","group":"Pinks & Roses"},{"id":"3708","name":"Melon - Light","hex":"#FDA0AE","group":"Pinks & Roses"},{"id":"3712","name":"Salmon - Medium","hex":"#D95D5D","group":"Corals & Salmons"},{"id":"3713","name":"Salmon - Very Light","hex":"#FDD5D0","group":"Corals & Salmons"},{"id":"3716","name":"Dusty Rose - Very Light","hex":"#FCAFB9","group":"Pinks & Roses"},{"id":"3721","name":"Shell Pink - Dark","hex":"#933B3D","group":"Pinks & Roses"},{"id":"3722","name":"Shell Pink - Medium","hex":"#A04B4C","group":"Pinks & Roses"},{"id":"3726","name":"Antique Mauve - Dark","hex":"#95565C","group":"Mauves & Antique"},{"id":"3727","name":"Antique Mauve - Light","hex":"#DA9EA6","group":"Mauves & Antique"},{"id":"3731","name":"Dusty Rose - Very Dark","hex":"#C34C5C","group":"Pinks & Roses"},{"id":"3733","name":"Dusty Rose","hex":"#EA7E86","group":"Pinks & Roses"},{"id":"3740","name":"Antique Violet - Dark","hex":"#71535D","group":"Mauves & Antique"},{"id":"3743","name":"Antique Violet - Very Light","hex":"#CFC2C9","group":"Mauves & Antique"},{"id":"3746","name":"Blue Violet - Dark","hex":"#844AB5","group":"Purples & Violets"},{"id":"3747","name":"Blue Violet - Very Light","hex":"#D0C5EC","group":"Purples & Violets"},{"id":"3750","name":"Antique Blue - Very Dark","hex":"#1D4552","group":"Mauves & Antique"},{"id":"3752","name":"Antique Blue - Very Light","hex":"#BAC9CC","group":"Mauves & Antique"},{"id":"3753","name":"Antique Blue - Ultra Very Light","hex":"#D9E6EC","group":"Mauves & Antique"},{"id":"3755","name":"Baby Blue","hex":"#81A5D8","group":"Blues"},{"id":"3756","name":"Baby Blue - Light","hex":"#E9F4FA","group":"Blues"},{"id":"3760","name":"Wedgewood - Medium","hex":"#467293","group":"Teals & Turquoise"},{"id":"3761","name":"Sky Blue - Light","hex":"#B1D0DF","group":"Blues"},{"id":"3765","name":"Peacock Blue - Very Dark","hex":"#175E78","group":"Blues"},{"id":"3766","name":"Peacock Blue - Light","hex":"#4B8AA1","group":"Blues"},{"id":"3768","name":"Gray Green - Dark","hex":"#4C605F","group":"Grays"},{"id":"3770","name":"Tawny - Very Light","hex":"#FEF1D8","group":"Mauves & Antique"},{"id":"3771","name":"Peach - Dark","hex":"#E8AC9B","group":"Corals & Salmons"},{"id":"3772","name":"Desert Sand - Very Dark","hex":"#995744","group":"Corals & Salmons"},{"id":"3773*","name":"3773*","hex":"#CF866D","group":"Browns & Tans"},{"id":"3774","name":"Desert Sand - Very Light","hex":"#F3CFB4","group":"Corals & Salmons"},{"id":"3776","name":"Mahogany - Light","hex":"#C96444","group":"Browns & Tans"},{"id":"3777","name":"Terra Cotta - Very Dark","hex":"#922F25","group":"Corals & Salmons"},{"id":"3778","name":"Terra Cotta - Light","hex":"#D2705C","group":"Corals & Salmons"},{"id":"3779","name":"Terra Cotta - Ultra Very Light","hex":"#F2AB95","group":"Corals & Salmons"},{"id":"3781","name":"Mocha Brown - Dark","hex":"#593F2B","group":"Browns & Tans"},{"id":"3782","name":"Mocha Brown - Light","hex":"#B69D80","group":"Browns & Tans"},{"id":"3787","name":"Brown Gray - Dark","hex":"#62524C","group":"Grays"},{"id":"3790","name":"Beige Gray - Ultra Dark","hex":"#6D5A4B","group":"Grays"},{"id":"3799","name":"Pewter Gray - Very Dark","hex":"#39393D","group":"Grays"},{"id":"3801","name":"Melon - Very Dark","hex":"#E4353D","group":"Reds"},{"id":"3802","name":"Antique Mauve - Very Dark","hex":"#672A33","group":"Mauves & Antique"},{"id":"3803","name":"Mauve - Dark","hex":"#872A43","group":"Mauves & Antique"},{"id":"3804","name":"Cyclamen Pink - Dark","hex":"#CE2B63","group":"Reds"},{"id":"3805","name":"Cyclamen Pink","hex":"#DF3C73","group":"Reds"},{"id":"3806","name":"Cyclamen Pink - Light","hex":"#F15A91","group":"Reds"},{"id":"3807","name":"Cornflower Blue","hex":"#4B599E","group":"Blues"},{"id":"3808","name":"Turquoise - Ultra Very Dark","hex":"#03535C","group":"Teals & Turquoise"},{"id":"3809","name":"Turquoise - Very Dark","hex":"#136A75","group":"Teals & Turquoise"},{"id":"3810","name":"Turquoise - Dark","hex":"#2D8D98","group":"Teals & Turquoise"},{"id":"3811","name":"Turquoise - Very Light","hex":"#A8E2E5","group":"Teals & Turquoise"},{"id":"3812","name":"Seagreen - Very Dark","hex":"#07A184","group":"Teals & Turquoise"},{"id":"3813","name":"Blue Green - Light","hex":"#86C3AB","group":"Blues"},{"id":"3814","name":"Aquamarine","hex":"#0B8673","group":"Teals & Turquoise"},{"id":"3815","name":"Celadon Green - Dark","hex":"#437259","group":"Greens"},{"id":"3816","name":"Celadon Green","hex":"#60937A","group":"Greens"},{"id":"3817","name":"Celadon Green - Light","hex":"#81C6A4","group":"Greens"},{"id":"3818","name":"Emerald Green - Ultra Very Dark","hex":"#005D2E","group":"Greens"},{"id":"3819","name":"Moss Green - Light","hex":"#CCC959","group":"Greens"},{"id":"3820","name":"Straw - Dark","hex":"#DBA53E","group":"Golds & Straws"},{"id":"3821","name":"Straw","hex":"#EBBB52","group":"Golds & Straws"},{"id":"3822","name":"Straw - Light","hex":"#F7D169","group":"Golds & Straws"},{"id":"3823","name":"Yellow - Ultra Pale","hex":"#FEF5CD","group":"Yellows"},{"id":"3824","name":"Apricot - Light","hex":"#FCAE99","group":"Corals & Salmons"},{"id":"3825","name":"Pumpkin - Pale","hex":"#FEA370","group":"Oranges"},{"id":"3826","name":"Golden Brown","hex":"#B16633","group":"Golds & Straws"},{"id":"3827","name":"Golden Brown - Pale","hex":"#EAA664","group":"Golds & Straws"},{"id":"3828","name":"Hazelnut Brown","hex":"#AA7C43","group":"Browns & Tans"},{"id":"3829","name":"Old Gold - Very Dark","hex":"#A7671D","group":"Golds & Straws"},{"id":"3830","name":"Terra Cotta","hex":"#A94138","group":"Corals & Salmons"},{"id":"3831","name":"Raspberry - Dark","hex":"#C12B52","group":"Reds"},{"id":"3832","name":"Raspberry - Medium","hex":"#E36370","group":"Reds"},{"id":"3833","name":"Raspberry - Light","hex":"#EA8B96","group":"Reds"},{"id":"3834","name":"Grape - Dark","hex":"#6A2258","group":"Purples & Violets"},{"id":"3835","name":"Grape - Medium","hex":"#924D78","group":"Purples & Violets"},{"id":"3836","name":"Grape - Light","hex":"#C597B9","group":"Purples & Violets"},{"id":"3837","name":"Lavender - Ultra Dark","hex":"#8A2A8F","group":"Lavenders"},{"id":"3838","name":"Lavender Blue - Dark","hex":"#606BAD","group":"Lavenders"},{"id":"3839","name":"Lavender Blue - Medium","hex":"#7A7EC5","group":"Lavenders"},{"id":"3840","name":"Lavender Blue - Light","hex":"#B2BDEA","group":"Lavenders"},{"id":"3841","name":"Baby Blue - Pale","hex":"#D9EAF2","group":"Blues"},{"id":"3842","name":"Wedgewood - Dark","hex":"#06506A","group":"Teals & Turquoise"},{"id":"3843","name":"Electric Blue","hex":"#28A3DE","group":"Blues"},{"id":"3844","name":"Bright Turquoise - Dark","hex":"#1F7FA0","group":"Teals & Turquoise"},{"id":"3845","name":"Bright Turquoise - Medium","hex":"#2BADD1","group":"Teals & Turquoise"},{"id":"3846","name":"Bright Turquoise - Light","hex":"#5ECCEC","group":"Teals & Turquoise"},{"id":"3847","name":"Teal Green - Dark","hex":"#186358","group":"Teals & Turquoise"},{"id":"3848","name":"Teal Green - Medium","hex":"#207E72","group":"Teals & Turquoise"},{"id":"3849","name":"Teal Green - Light","hex":"#35B193","group":"Teals & Turquoise"},{"id":"3850","name":"Bright Green - Dark","hex":"#208B46","group":"Greens"},{"id":"3851","name":"Bright Green - Light","hex":"#61BB84","group":"Greens"},{"id":"3852","name":"Straw - Very Dark","hex":"#E3A730","group":"Golds & Straws"},{"id":"3853","name":"Autumn Gold - Dark","hex":"#EF8125","group":"Oranges"},{"id":"3854","name":"Autumn Gold - Medium","hex":"#FBAC56","group":"Oranges"},{"id":"3855","name":"Autumn Gold - Light","hex":"#FDDFA0","group":"Oranges"},{"id":"3856","name":"Mahogany - Ultra Very Light","hex":"#FDBE8E","group":"Browns & Tans"},{"id":"3857","name":"Rosewood - Dark","hex":"#6A2F26","group":"Reds"},{"id":"3858","name":"Rosewood - Medium","hex":"#803A32","group":"Reds"},{"id":"3859","name":"Rosewood - Light","hex":"#BA7A6C","group":"Reds"},{"id":"3860","name":"Cocoa","hex":"#896362","group":"Mauves & Antique"},{"id":"3861","name":"Cocoa - Light","hex":"#AC8583","group":"Mauves & Antique"},{"id":"3862","name":"Mocha Beige - Dark","hex":"#6E492A","group":"Browns & Tans"},{"id":"3863","name":"Mocha Beige - Medium","hex":"#94725D","group":"Browns & Tans"},{"id":"3864","name":"Mocha Beige - Light","hex":"#C9AA92","group":"Browns & Tans"},{"id":"3865","name":"Winter White","hex":"#FFFDF9","group":"Whites & Ecru"},{"id":"3866","name":"Mocha Brown - Ultra Very Light","hex":"#F0E6D7","group":"Browns & Tans"},{"id":"3880*","name":"3880*","hex":"#BB6864","group":"Reds"},{"id":"3881*","name":"3881*","hex":"#BAE4B6","group":"Greens"},{"id":"3882*","name":"3882*","hex":"#5A3C2D","group":"Browns & Tans"},{"id":"3883*","name":"3883*","hex":"#F98756","group":"Corals & Salmons"},{"id":"3884*","name":"3884*","hex":"#4B4B49","group":"Grays"},{"id":"3885*","name":"3885*","hex":"#1F3279","group":"Blues"},{"id":"3886*","name":"3886*","hex":"#79263B","group":"Reds"},{"id":"3887*","name":"3887*","hex":"#9442A7","group":"Purples & Violets"},{"id":"3888*","name":"3888*","hex":"#71535D","group":"Grays"},{"id":"3889*","name":"3889*","hex":"#FCF999","group":"Yellows"},{"id":"3890*","name":"3890*","hex":"#4B8AA1","group":"Blues"},{"id":"3891*","name":"3891*","hex":"#0061B0","group":"Blues"},{"id":"3892*","name":"3892*","hex":"#FD6F1A","group":"Corals & Salmons"},{"id":"3893*","name":"3893*","hex":"#EAD0B5","group":"Browns & Tans"},{"id":"3894*","name":"3894*","hex":"#9DC72D","group":"Greens"},{"id":"3895*","name":"3895*","hex":"#6B6860","group":"Grays"},{"id":"E150*","name":"E150*","hex":"#D00153","group":"Metallic Solids"},{"id":"E152*","name":"E152*","hex":"#E1A1A1","group":"Metallic Solids"},{"id":"E154*","name":"E154*","hex":"#4B233A","group":"Metallic Solids"},{"id":"E155","name":"E155","hex":"#9774B6","group":"Metallic Solids"},{"id":"E168","name":"E168","hex":"#B1AEB7","group":"Metallic Solids"},{"id":"E211","name":"E211","hex":"#E5BDED","group":"Metallic Solids"},{"id":"E301","name":"E301","hex":"#AA5237","group":"Metallic Solids"},{"id":"E310","name":"E310","hex":"#000000","group":"Metallic Solids"},{"id":"E316","name":"E316","hex":"#BC757F","group":"Metallic Solids"},{"id":"E317","name":"E317","hex":"#6D6469","group":"Metallic Solids"},{"id":"E321","name":"E321","hex":"#BD1136","group":"Metallic Solids"},{"id":"E334","name":"E334","hex":"#6085B8","group":"Metallic Solids"},{"id":"E415","name":"E415","hex":"#B8B9BD","group":"Metallic Solids"},{"id":"E436","name":"E436","hex":"#C78559","group":"Metallic Solids"},{"id":"E677","name":"E677","hex":"#F2DC9F","group":"Metallic Solids"},{"id":"E699","name":"E699","hex":"#075B26","group":"Metallic Solids"},{"id":"E703","name":"E703","hex":"#63B330","group":"Metallic Solids"},{"id":"E718","name":"E718","hex":"#CB2089","group":"Metallic Solids"},{"id":"E746","name":"E746","hex":"#FAF2D5","group":"Metallic Solids"},{"id":"E747","name":"E747","hex":"#CEE9EA","group":"Metallic Solids"},{"id":"E815","name":"E815","hex":"#800B34","group":"Metallic Solids"},{"id":"E818","name":"E818","hex":"#FEDEDD","group":"Metallic Solids"},{"id":"E825","name":"E825","hex":"#34588F","group":"Metallic Solids"},{"id":"E898","name":"E898","hex":"#532F1B","group":"Metallic Solids"},{"id":"E966","name":"E966","hex":"#94D28A","group":"Metallic Solids"},{"id":"E967","name":"E967","hex":"#FFC2AC","group":"Metallic Solids"},{"id":"E3685","name":"E3685","hex":"#79263B","group":"Metallic Solids"},{"id":"E3747","name":"E3747","hex":"#B9CDE5","group":"Metallic Solids"},{"id":"E3821","name":"E3821","hex":"#EABD00","group":"Metallic Solids"},{"id":"E3837","name":"E3837","hex":"#7030A0","group":"Metallic Solids"},{"id":"E3843","name":"E3843","hex":"#00B0F0","group":"Metallic Solids"},{"id":"E3849","name":"E3849","hex":"#00FF99","group":"Metallic Solids"},{"id":"E3852","name":"E3852","hex":"#CCA500","group":"Metallic Solids"},{"id":"E980","name":"E980","hex":"#F0FF00","group":"Metallic Solids"},{"id":"E990","name":"E990","hex":"#06EC21","group":"Metallic Solids"},{"id":"E985*","name":"E985*","hex":"#FFFF00","group":"Metallic Solids"},{"id":"E987*","name":"E987*","hex":"#00F1B0","group":"Metallic Solids"},{"id":"E995*","name":"E995*","hex":"#FF3667","group":"Metallic Solids"},{"id":"E1010*","name":"E1010*","hex":"#FF3697","group":"Metallic Solids"},{"id":"E1020*","name":"E1020*","hex":"#FF5E00","group":"Metallic Solids"},{"id":"E1024*","name":"E1024*","hex":"#FF8F5F","group":"Metallic Solids"},{"id":"E1026*","name":"E1026*","hex":"#5E59B9","group":"Metallic Solids"},{"id":"E1040*","name":"E1040*","hex":"#32CFFF","group":"Metallic Solids"},{"id":"E1050*","name":"E1050*","hex":"#9256A2","group":"Metallic Solids"},{"id":"E1055*","name":"E1055*","hex":"#BC23A2","group":"Metallic Solids"},{"id":"E940","name":"E940","hex":"#999999","group":"Metallic Solids"},{"id":"5282","name":"Metallic Pearl - Gold","hex":"#F2AE3F","group":"Golds & Straws"},{"id":"5283","name":"Metallic Pearl - Silver","hex":"#C5C4C9","group":"Grays"}],"gradients":[{"id":"48","name":"Baby Pink","group":"Variegated","stops":"0:#C01D4A,39:#D43C65,53:#DA4E75,60:#E15B80,77:#EC7F9E,100:#FEAEC7"},{"id":"51","name":"Burnt Orange","group":"Variegated","stops":"0:#FC6924,7:#FC7231,19:#FD8145,29:#FD8F54,39:#FE9A67,98:#FCAB5C"},{"id":"52","name":"Violet","group":"Variegated","stops":"0:#E3BAE6,10:#C892D1,17:#B474C1,24:#A257B2,99:#8F3A95"},{"id":"53","name":"Steel Grey","group":"Variegated","stops":"0:#ACA9B2,10:#97949B,23:#7A787D,99:#49494B"},{"id":"67","name":"Baby Blue","group":"Variegated","stops":"0:#C9E5F0,48:#B1C3E7,55:#A7BAE0,65:#99AEDB,99:#778CC5"},{"id":"69","name":"Terra Cotta","group":"Variegated","stops":"0:#F1C1AB,10:#DBA18D,19:#C78370,100:#AE5046"},{"id":"90","name":"Yellow","group":"Variegated","stops":"0:#FD8C12,10:#FC941B,25:#FEA12A,33:#FEA531,87:#FBDC44,96:#FFE349"},{"id":"92","name":"Avocado","group":"Variegated","stops":"0:#A0B75B,48:#CFE9A0,58:#B3D189,71:#8DAE69,96:#436C2B"},{"id":"93","name":"Blue Haze","group":"Variegated","stops":"0:#B2C2E6,10:#9BACD8,22:#8190C7,29:#717FBC,41:#5866AD,99:#393280"},{"id":"94","name":"Khaki Green","group":"Variegated","stops":"0:#65540C,25:#796A31,35:#827240,99:#B1B084"},{"id":"99","name":"Mauve","group":"Variegated","stops":"0:#B84C64,8:#C5687B,58:#E1B4B9,69:#C49097,82:#A56170,99:#843B4F"},{"id":"105","name":"Tan/Brown","group":"Variegated","stops":"0:#945534,58:#D09970,78:#E2BB94,96:#EFD9B2"},{"id":"106","name":"Coral","group":"Variegated","stops":"0:#F50F02,8:#FB2D20,28:#FC7766,35:#FE9381,98:#FA9579"},{"id":"107","name":"Carnation","group":"Variegated","stops":"0:#BC1135,42:#BB2747,52:#C63155,70:#DA4771,84:#E7698E,96:#F386A6"},{"id":"111","name":"Mustard","group":"Variegated","stops":"0:#935026,11:#9B5726,63:#BC732A,98:#D08541"},{"id":"115","name":"Garnet","group":"Variegated","stops":"0:#BC1036,37:#8D0A32,75:#6F0E2D,99:#661128"},{"id":"121","name":"Delft Blue","group":"Variegated","stops":"0:#B0B6E8,35:#4C4996,100:#8993C4"},{"id":"125","name":"Seafoam Green","group":"Variegated","stops":"0:#106C43,13:#1F8A56,80:#76D790,99:#A5E6AE"},{"id":"127","name":"Just Cross Stitch","group":"Variegated","stops":"0:#2A3A78,55:#2D2B7E,90:#47509D,100:#4C58A6"},{"id":"4010","name":"Winter Sky","group":"Variations","stops":"0:#c4e9f3,55:#d2d2ca,100:#bab3db"},{"id":"4015","name":"Stormy Skies","group":"Variations","stops":"0:#3C727E,19:#398290,67:#37969C,100:#4DAEA6"},{"id":"4020","name":"Tropical Waters","group":"Variations","stops":"0:#C9E9E8,19:#4EC5B2,27:#1EB89E,100:#A9EAB0"},{"id":"4025","name":"Caribbean Bay","group":"Variations","stops":"0:#3e5c41,35:#416644,73:#517B4D,100:#608A58"},{"id":"4030","name":"Monet's Garden","group":"Variations","stops":"0:#44B49B,22:#58B44F,100:#848F29"},{"id":"4040","name":"Water Lillies","group":"Variations","stops":"0:#A6E5D4,57:#D1EEAE,65:#D8EFA7,100:#E0F479"},{"id":"4045","name":"Evergreen Forest","group":"Variations","stops":"0:#637873,27:#929876,100:#B59E7F"},{"id":"4050","name":"Roaming Pastures","group":"Variations","stops":"0:#44B49B,22:#58B44F,100:#848F29"},{"id":"4060","name":"Weeping Willow","group":"Variations","stops":"0:#A6E5D4,57:#D1EEAE,65:#D8EFA7,100:#E0F479"},{"id":"4065","name":"Morning Meadow","group":"Variations","stops":"0:#FABC8C,8:#FDC896,19:#FED39C,73:#FCEDAD,100:#FDF5C8"},{"id":"4070","name":"Autumn Leaves","group":"Variations","stops":"0:#ffd89f,67:#fbb098,77:#fea270,96:#fdd269"},{"id":"4075","name":"Wheat Fields","group":"Variations","stops":"0:#892504,28:#EE6658,96:#FCB589"},{"id":"4077","name":"Morning Sunshine","group":"Variations","stops":"0:#603621,40:#e17648,51:#E47044,100:#e0a23f"},{"id":"4080","name":"Daffodil Fields","group":"Variations","stops":"0:#FCC52D,29:#F2A938,39:#F09B3E,48:#EF8F42,100:#E9A662"},{"id":"4090","name":"Golden Oasis","group":"Variations","stops":"0:#AE6D5D,37:#5e362c,100:#aa4936"},{"id":"4100","name":"Summer Breeze","group":"Variations","stops":"0:#ffd89f,67:#fbb098,77:#fea270,96:#fdd269"},{"id":"4110","name":"Sunrise","group":"Variations","stops":"0:#D63F68,7:#DB4D74,29:#EA7296,36:#F07EA0,48:#F794B3,100:#FDABC2"},{"id":"4120","name":"Tropical Sunset","group":"Variations","stops":"0:#FC480B,50:#fa636e,100:#FD96AB"},{"id":"4124","name":"Bonfire","group":"Variations","stops":"0:#BE0F36,33:#CF1B34,65:#ED3245,72:#F12D3B,82:#F12228,93:#F41913,100:#F61408"},{"id":"4126","name":"Desert Canyon","group":"Variations","stops":"0:#960958,35:#770F34,52:#8B083C,100:#970A2D"},{"id":"4128","name":"Gold Coast","group":"Variations","stops":"0:#3A609D,28:#7D75B1,100:#B772C5"},{"id":"4130","name":"Chilean Sunset","group":"Variations","stops":"0:#9673b5,39:#817EBB,100:#b2b4e5"},{"id":"4140","name":"Driftwood","group":"Variations","stops":"0:#09275D,35:#022b68,65:#1E3277,100:#36316B"},{"id":"4145","name":"Sandune","group":"Variations","stops":"0:#b49a7b,100:#705d4e"},{"id":"4150","name":"Desert Sand","group":"Variations","stops":"0:#deceb4,40:#fef6e4,51:#f1ddb8,100:#ecd5b5"},{"id":"4160","name":"Glistening Pearl","group":"Variations","stops":"0:#fce2dc,50:#fbf3d6,100:#fce2dc"},{"id":"4170","name":"Whispering Wind","group":"Variations","stops":"0:#fdc0af,50:#fcb5c7,100:#fce2dc"},{"id":"4180","name":"Rose Petals","group":"Variations","stops":"0:#6C523A,28:#9d8969,57:#af2f32,100:#B86E7A"},{"id":"4190","name":"Ocean Coral","group":"Variations","stops":"0:#cedb75,29:#627972,64:#66914c,100:#79848C"},{"id":"4200","name":"Wild Fire","group":"Variations","stops":"0:#9E4263,26:#524A61,31:#1c6b6f,72:#6fc5b6,100:#5165AA"},{"id":"4210","name":"Radiant Ruby","group":"Variations","stops":"0:#BB9D54,16:#DBC884,27:#F1E6A4,100:#E3AE9E"},{"id":"4215","name":"Northern Lights","group":"Variations","stops":"0:#7B5E58,48:#B3924D,77:#B3B65F,87:#BBAA7F,100:#C59CAE"},{"id":"4220","name":"Lavender Fields","group":"Variations","stops":"0:#C9C959,17:#DF8552,27:#EB5D4F,70:#79685d,100:#BC5A41"},{"id":"4230","name":"Crystal Water","group":"Variations","stops":"7:#CC753D,35:#B92C35,55:#6E2721,63:#432e1b,100:#4C491E"},{"id":"4235","name":"Arctic Sea","group":"Variations","stops":"0:#90969B,8:#888A9F,39:#62528F,58:#A53652,77:#8E2B45,87:#662B52,100:#222A5C"},{"id":"4240","name":"Mid Summer Night","group":"Variations","stops":"0:#116B74,46:#9F8A9D,69:#E4BEE5,90:#975C8C,99:#7B3569"},{"id":"4500","name":"Columbine Gardens","group":"Coloris","stops":"0:#7B5C3F,48:#847A71,58:#8C8D91,70:#8D9AAA,100:#506270"},{"id":"4501","name":"Wildflowers","group":"Coloris","stops":"0:#97D8D2,69:#FEF0E3,76:#FED3CA,86:#FBB0AA,93:#FF9492,100:#FC7A7C"},{"id":"4502","name":"Camelia","group":"Coloris","stops":"0:#C3E197,37:#D7D1DD,47:#D59FB6,58:#D76B8B,100:#C82C54"},{"id":"4503","name":"Wisteria","group":"Coloris","stops":"0:#6B2159,43:#A5756E,53:#B69866,70:#CCC864,81:#CCC785,100:#CEC3BD"},{"id":"4504","name":"Hydrangea","group":"Coloris","stops":"0:#6C523A,28:#9d8969,57:#af2f32,100:#B86E7A"},{"id":"4505","name":"Heather","group":"Coloris","stops":"0:#5a5a2a,28:#989d75,57:#886d7b,100:#a79098"},{"id":"4506","name":"Spring","group":"Coloris","stops":"0:#cedb75,29:#627972,64:#66914c,100:#79848C"},{"id":"4507","name":"Bouginvillea","group":"Coloris","stops":"0:#9E4263,26:#524A61,31:#1c6b6f,72:#6fc5b6,100:#5165AA"},{"id":"4508","name":"Frosted Countryside","group":"Coloris","stops":"0:#BB9D54,16:#DBC884,27:#F1E6A4,100:#E3AE9E"},{"id":"4509","name":"Granite Coast","group":"Coloris","stops":"0:#7B5E58,48:#B3924D,77:#B3B65F,87:#BBAA7F,100:#C59CAE"},{"id":"4510","name":"Maple","group":"Coloris","stops":"0:#C9C959,17:#DF8552,27:#EB5D4F,70:#79685d,100:#BC5A41"},{"id":"4511","name":"Indian Summer","group":"Coloris","stops":"7:#CC753D,35:#B92C35,55:#6E2721,63:#432e1b,100:#4C491E"},{"id":"4512","name":"States","group":"Coloris","stops":"0:#90969B,8:#888A9F,39:#62528F,58:#A53652,77:#8E2B45,87:#662B52,100:#222A5C"},{"id":"4513","name":"London","group":"Coloris","stops":"0:#e8e8e8,39:#4a4549,67:#6c1836,100:#958990"},{"id":"4514","name":"Venice","group":"Coloris","stops":"0:#116B74,46:#9F8A9D,69:#E4BEE5,90:#975C8C,99:#7B3569"},{"id":"4515","name":"Paris","group":"Coloris","stops":"0:#7B5C3F,48:#847A71,58:#8C8D91,70:#8D9AAA,100:#506270"},{"id":"4516","name":"Black Forest","group":"Coloris","stops":"0:#5A3A2D,40:#986957,57:#D2BCA7,72:#E9CDBF,95:#AA3D52"},{"id":"4517","name":"Elves","group":"Coloris","stops":"0:#411E1E,10:#AA504C,29:#6B7A6E,39:#6C7266,67:#8B1930,100:#DA2B42"},{"id":"4518","name":"Cottage","group":"Coloris","stops":"0:#55342f,31:#a7827c,61:#4d4c1e,100:#7a1130"},{"id":"4519","name":"Jingle Bells","group":"Coloris","stops":"0:#483121,41:#1f372a,57:#a20c2f,100:#BA1035"},{"id":"4520","name":"Christmas Story","group":"Coloris","stops":"0:#be1337,27:#fcfefd,64:#d1f0ad,100:#209a5d"},{"id":"4521","name":"Wide Open Spaces","group":"Coloris","stops":"0:#a3a3a3,40:#38392b,65:#cfb168,100:#534020"},{"id":"4522","name":"Canadian Night","group":"Coloris","stops":"0:#4b2f23,25:#672356,68:#3b393c,100:#764131"},{"id":"4523","name":"North Wind","group":"Coloris","stops":"0:#B4BCEA,30:#d09cdc,50:#bc91be,67:#8b7776,100:#B39A72"},{"id":"E130","name":"Gemstones","group":"Metallic","stops":"0:#C11F4E,24:#a6dee1,46:#CABD89,58:#f59218,100:#E2D890"},{"id":"E131","name":"Holiday Sparkle","group":"Metallic","stops":"0:#FFFDDE,22:#c83c40,42:#fcf503,71:#9bd448,100:#FBFB5D"},{"id":"E133","name":"Midnight Madness","group":"Metallic","stops":"0:#000000,27:#d44c2a,44:#b3de38,60:#c2cf7b,73:#019ed6,100:#000000"},{"id":"E135","name":"Golden Dawn","group":"Metallic","stops":"0:#A8E2E6,36:#ADDECB,43:#B4D9AE,55:#C1D07F,99:#CAC859"},{"id":"E136","name":"Emerald Isle","group":"Metallic","stops":"0:#00A34A,39:#21AE4B,46:#3FB74C,58:#71C64D,65:#8FCF4F,98:#C5EF61"},{"id":"E138","name":"Caribbean Ripples","group":"Metallic","stops":"0:#2669C0,49:#ca4242,60:#EDC919,76:#78cc53,100:#2669c0"},{"id":"E140","name":"Carnival Fun","group":"Metallic","stops":"0:#0666F0,48:#1FB945,55:#A9E41A,64:#FCB600,72:#FE1600,100:#6297E8"},{"id":"E141","name":"All that Jazz","group":"Metallic","stops":"0:#B64EA7,33:#4075AB,42:#BDA835,65:#FFA600,73:#FF0A00,100:#D986BA"},{"id":"E144","name":"Majestic Metals","group":"Metallic","stops":"0:#FFE600,26:#6cce2f,52:#E1D61C,64:#3e74c9,100:#FFEE58"},{"id":"E146","name":"Tropical Delight","group":"Metallic","stops":"0:#FEE509,43:#ffb103,50:#2ec6e0,77:#84e47d,100:#FEEF5B"},{"id":"E148","name":"Purple Essence","group":"Metallic","stops":"0:#A391B7,37:#3C73AC,46:#fcc201,100:#C2B5CF"},{"id":"E5200","name":"White","group":"Metallic","stops":"0:#FFFFFF,48:#bcbcbc,100:#ffffff"}]};
+const SAMPLE_SVG=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><g id="color-6"><circle cx="70" cy="70" r="26"/><circle cx="335" cy="85" r="18"/><circle cx="60" cy="330" r="20"/><circle cx="340" cy="325" r="28"/></g><g id="color-5"><rect x="190" y="215" width="20" height="150" rx="10"/></g><g id="color-4"><ellipse cx="150" cy="300" rx="52" ry="20" transform="rotate(-28 150 300)"/><ellipse cx="250" cy="275" rx="52" ry="20" transform="rotate(28 250 275)"/></g><g id="color-1"><ellipse cx="200" cy="82" rx="30" ry="62"/><ellipse cx="200" cy="82" rx="30" ry="62" transform="rotate(72 200 170)"/><ellipse cx="200" cy="82" rx="30" ry="62" transform="rotate(144 200 170)"/><ellipse cx="200" cy="82" rx="30" ry="62" transform="rotate(216 200 170)"/><ellipse cx="200" cy="82" rx="30" ry="62" transform="rotate(288 200 170)"/></g><g id="color-2"><ellipse cx="200" cy="112" rx="18" ry="38" transform="rotate(36 200 170)"/><ellipse cx="200" cy="112" rx="18" ry="38" transform="rotate(108 200 170)"/><ellipse cx="200" cy="112" rx="18" ry="38" transform="rotate(180 200 170)"/><ellipse cx="200" cy="112" rx="18" ry="38" transform="rotate(252 200 170)"/><ellipse cx="200" cy="112" rx="18" ry="38" transform="rotate(324 200 170)"/></g><circle id="color-3" cx="200" cy="170" r="30"/><g id="color-7"><circle cx="200" cy="170" r="10"/></g></svg>`;
+
+/* ---------- helpers ---------- */
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid=()=>Math.random().toString(36).slice(2,9);
+const rnd=(a,b)=>a+Math.random()*(b-a), pick=a=>a[Math.floor(Math.random()*a.length)];
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const linspace=(a,b,m)=>m===1?[(a+b)/2]:[...Array(m)].map((_,i)=>a+(b-a)*i/(m-1));
+let toastT;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('on'),2600)}
+
+/* ---------- color math ---------- */
+const hex2rgb=h=>{h=h.replace('#','');if(h.length===3)h=[...h].map(c=>c+c).join('');const n=parseInt(h,16);return[(n>>16)&255,(n>>8)&255,n&255]};
+const rgb2hex=(r,g,b)=>'#'+[r,g,b].map(v=>clamp(Math.round(v),0,255).toString(16).padStart(2,'0')).join('');
+const lin=v=>{v/=255;return v<=.04045?v/12.92:((v+.055)/1.055)**2.4};
+function rgb2lab([r,g,b]){const R=lin(r),G=lin(g),B=lin(b);
+  const x=(R*.4124564+G*.3575761+B*.1804375)/.95047,y=R*.2126729+G*.7151522+B*.072175,z=(R*.0193339+G*.119192+B*.9503041)/1.08883;
+  const f=t=>t>.008856?Math.cbrt(t):7.787*t+16/116,fx=f(x),fy=f(y),fz=f(z);return[116*fy-16,500*(fx-fy),200*(fy-fz)]}
+const hex2lab=h=>rgb2lab(hex2rgb(h));
+const lab2lch=([L,a,b])=>[L,Math.hypot(a,b),(Math.atan2(b,a)*180/Math.PI+360)%360];
+function dE(l1,l2){ // CIEDE2000
+  const rad=Math.PI/180,[L1,a1,b1]=l1,[L2,a2,b2]=l2;
+  const C1=Math.hypot(a1,b1),C2=Math.hypot(a2,b2),Cm=(C1+C2)/2,G=.5*(1-Math.sqrt(Cm**7/(Cm**7+25**7)));
+  const a1p=a1*(1+G),a2p=a2*(1+G),C1p=Math.hypot(a1p,b1),C2p=Math.hypot(a2p,b2);
+  const h1=(Math.atan2(b1,a1p)/rad+360)%360,h2=(Math.atan2(b2,a2p)/rad+360)%360;
+  const dL=L2-L1,dC=C2p-C1p;let dh=0;
+  if(C1p*C2p!==0){dh=h2-h1;if(dh>180)dh-=360;else if(dh<-180)dh+=360}
+  const dH=2*Math.sqrt(C1p*C2p)*Math.sin(dh/2*rad),Lm=(L1+L2)/2,Cp=(C1p+C2p)/2;
+  let hm=h1+h2;if(C1p*C2p!==0)hm=Math.abs(h1-h2)<=180?(h1+h2)/2:(h1+h2+(h1+h2<360?360:-360))/2;
+  const T=1-.17*Math.cos((hm-30)*rad)+.24*Math.cos(2*hm*rad)+.32*Math.cos((3*hm+6)*rad)-.2*Math.cos((4*hm-63)*rad);
+  const dT=30*Math.exp(-(((hm-275)/25)**2)),Rc=2*Math.sqrt(Cp**7/(Cp**7+25**7));
+  const Sl=1+.015*(Lm-50)**2/Math.sqrt(20+(Lm-50)**2),Sc=1+.045*Cp,Sh=1+.015*Cp*T,Rt=-Math.sin(2*dT*rad)*Rc;
+  return Math.sqrt((dL/Sl)**2+(dC/Sc)**2+(dH/Sh)**2+Rt*(dC/Sc)*(dH/Sh));
+}
+function sampleStops(st,t){const last=st[st.length-1];if(t<=st[0].p)return st[0].hex;if(t>=last.p)return last.hex;
+  for(let i=1;i<st.length;i++)if(t<=st[i].p){const a=st[i-1],b=st[i],k=(t-a.p)/((b.p-a.p)||1),A=hex2rgb(a.hex),B=hex2rgb(b.hex);return rgb2hex(...A.map((v,j)=>v+(B[j]-v)*k))}}
+const parseStops=s=>s.split(',').map(x=>{const[p,h]=x.split(':');return{p:+p,hex:h}}).sort((a,b)=>a.p-b.p);
+const cssGrad=(st,dir='to bottom')=>`linear-gradient(${dir},${st.map(s=>`${s.hex} ${s.p}%`).join(',')})`;
+
+/* ---------- catalog + threads ---------- */
+const DMC_S=new Map(DMC.solidColors.map(o=>[o.id,o])), DMC_G=new Map(DMC.gradients.map(o=>[o.id,o]));
+const TC=new Map();
+function mkThread(o){const t={...o};
+  if(o.stops){t.grad=true;t.samples=[...Array(12)].map((_,i)=>{const p=i*100/11,hex=sampleStops(o.stops,p);return{p,hex,lab:hex2lab(hex)}});
+    const avg=[0,1,2].map(j=>t.samples.reduce((a,s)=>a+hex2rgb(s.hex)[j],0)/12);t.hex=rgb2hex(...avg)}
+  else t.samples=[{p:50,hex:o.hex,lab:hex2lab(o.hex)}];
+  t.lab=hex2lab(t.hex);t.fill=t.grad?cssGrad(t.stops):t.hex;return t}
+function getThread(key){if(TC.has(key))return TC.get(key);let t=null;
+  if(key.startsWith('dmc:')){const o=DMC_S.get(key.slice(4));if(o)t=mkThread({key,brand:'DMC',code:o.id,name:o.name,group:o.group,hex:o.hex,metallic:o.group==='Metallic Solids'})}
+  else if(key.startsWith('dmcg:')){const o=DMC_G.get(key.slice(5));if(o)t=mkThread({key,brand:'DMC',code:o.id,name:o.name,group:o.group+' (gradient)',stops:parseStops(o.stops),metallic:o.group==='Metallic'})}
+  else if(key.startsWith('c:')){const o=S.custom.find(c=>c.id===key.slice(2));if(o){const h=o.hexes;
+    t=mkThread({key,brand:o.brand||'',code:o.code||'',name:o.name||'',group:'My custom',custom:true,metallic:!!o.metallic,...(h.length>1?{stops:h.map((x,i)=>({p:i*100/(h.length-1),hex:x}))}:{hex:h[0]})})}}
+  if(t)TC.set(key,t);return t}
+const label=t=>[t.brand,t.code].filter(Boolean).join(' ')||t.name;
+
+/* ---------- state ---------- */
+let S={types:[],custom:[],favorites:[],svg:null,theme:'dark'};
+let ui={tab:'gen',typeId:null,pal:null,jpgPrev:true,browse:{src:'dmc',group:'all',q:''},cStops:2,result:null,
+  sel:'complementary',gen:{count:5,baseKey:'',gmode:'avg',grad:true,metal:true}};
+let dirty=false;const REG=new Map();
+const curType=()=>S.types.find(t=>t.id===ui.typeId)||S.types[0]||null;
+const ownedList=t=>t?t.threads.map(e=>getThread(e.key)).filter(Boolean):[];
+function mark(){dirty=true;chrome()}
+
+/* ---------- harmony + generation ---------- */
+const HARM={complementary:{name:'Complementary',off:[0,180]},analogous:{name:'Analogous'},triadic:{name:'Triadic',off:[0,120,240]},
+  split:{name:'Split-complementary',off:[0,150,210]},tetradic:{name:'Tetradic (square)',off:[0,90,180,270]},
+  rectangle:{name:'Rectangle',off:[0,60,180,240]},mono:{name:'Monochromatic',off:[0]}};
+const NEAR=6;
+const meanHue=t=>{let x=0,y=0;t.samples.forEach(s=>{x+=s.lab[1];y+=s.lab[2]});return(Math.atan2(y,x)*180/Math.PI+360)%360};
+function makeTargets(hk,n,base,gmode,bal){
+  const[bL,bC,bH]=lab2lch(base.lab),neutral=bC<10,m=n-1,mono=hk==='mono';
+  const H0=(gmode==='anchor'&&base.grad&&bC>=6)?meanHue(base):neutral?rnd(0,360):bH;
+  let offs;
+  if(hk==='analogous')offs=[25,-25,50,-50,75,-75,12,-12].slice(0,m);
+  else{const a=HARM[hk].off,k=a.length;offs=[...Array(m)].map((_,j)=>{const i=j+1,r=Math.floor(i/k);return a[i%k]+(r?(r%2?1:-1)*8*r:0)})}
+  const Ls=bal?shuffle(linspace(18,90,m)):[...Array(m)].map(()=>clamp(bL+rnd(-24,24),14,93));
+  return offs.map((o,i)=>{const C=mono?bC*rnd(.8,1.15):neutral?rnd(26,50):clamp(bC*rnd(.75,1.2),14,75),h=(H0+o+360)%360*Math.PI/180;
+    return[Ls[i],C*Math.cos(h),C*Math.sin(h)]})}
+function buildSlots(pool,base,hk,n,gmode,bal){
+  const claimed=new Set([base.key]);
+  const claim=t=>{const a=[];for(const c of pool)if(!claimed.has(c.key)&&dE(t.lab,c.lab)<NEAR){claimed.add(c.key);a.push(c.key)}return a};
+  const slots=[{key:base.key,de:0,alts:claim(base),base:true}];
+  for(const tg of makeTargets(hk,n,base,gmode,bal)){let best=null;
+    for(const c of pool){if(claimed.has(c.key))continue;let d,p=null;
+      if(gmode==='range'&&c.grad){d=1e9;for(const s of c.samples){const x=dE(tg,s.lab);if(x<d){d=x;p=s.p}}}else d=dE(tg,c.lab);
+      if(!best||d<best.d)best={c,d,p}}
+    if(!best)break;claimed.add(best.c.key);slots.push({key:best.c.key,de:best.d,match:best.p,alts:claim(best.c)})}
+  return slots}
+function generate(){
+  const type=curType(),exs=new Set(type.excluded||[]),owned=ownedList(type).filter(t=>!exs.has(t.key)),g=ui.gen;
+  if(owned.length<3){toast('You need at least 3 threads that are not excluded in this yarn type.');return}
+  const n=g.count;let gmode=g.gmode;
+  const pool=owned.filter(t=>(g.grad||!t.grad)&&(g.metal||!t.metallic));
+  let base=g.baseKey?owned.find(t=>t.key===g.baseKey):null;
+  if(!base){const cand=gmode==='anchor'?owned.filter(t=>t.grad):pool;base=pick(cand.length?cand:(pool.length?pool:owned))}
+  let note='';
+  if(gmode==='anchor'&&!base.grad){gmode='range';note='The base is not a gradient thread, so "Any shade" matching was used instead of anchoring.'}
+  let p2=pool.filter(t=>t.key!==base.key);
+  if(gmode==='anchor'){const solids=p2.filter(t=>!t.grad);if(solids.length>=n-1)p2=solids}
+  const pals={};
+  for(const hk of Object.keys(HARM))pals[hk]={id:'p'+uid(),typeId:type.id,hk,harmony:HARM[hk].name,variant:'bal',gmode,slots:buildSlots(p2,base,hk,n,gmode,true)};
+  if(!pals[ui.sel])ui.sel='complementary';
+  ui.result={pals,n,note,baseKey:base.key};ui.pal=pals[ui.sel];renderResults();
+  $('#results')?.scrollIntoView({behavior:'smooth',block:'start'})}
+
+/* ---------- palette rendering ---------- */
+const qual=d=>d<2?'Exact match':d<5?'Very close':d<10?'Close match':'Loose match';
+const sig=p=>p.typeId+'|'+p.variant+'|'+p.slots.map(s=>s.key).join(',');
+const isFav=p=>S.favorites.some(f=>sig(f)===sig(p));
+function paletteCard(p){REG.set(p.id,p);
+  const type=S.types.find(t=>t.id===p.typeId),fav=isFav(p);
+  const slots=p.slots.map(s=>({s,t:getThread(s.key)})).filter(x=>x.t);
+  const lights=slots.map(x=>x.t.lab[0]),mix=Math.min(...lights)<35&&Math.max(...lights)>75;
+  return`<article class="pcard" data-pid="${p.id}"><header><div><h3>${esc(p.harmony)}</h3>
+    <p class="sub">${p.variant==='pure'?'True harmony · ':''}${esc(type?type.name:'')} · ${slots.length} threads${mix?' · includes light and dark threads':''}</p></div>
+    <div class="acts"><button class="btn sm ${fav?'on':''}" data-act="star" data-pid="${p.id}" aria-pressed="${fav}">${fav?'★ Saved':'☆ Save'}</button>
+    <button class="btn sm" data-act="mix" data-pid="${p.id}">⇄ Mix colors</button>${ui.tab==='saved'?`<button class="btn sm" data-act="prev" data-pid="${p.id}">Preview</button>`:''}
+    <button class="btn sm" data-act="list" data-pid="${p.id}">Text list</button>
+    <button class="btn sm" data-act="jpg" data-pid="${p.id}">JPG</button></div></header>
+    <div class="bands">${slots.map(({s,t})=>{
+      const pin=(p.gmode==='range'&&t.grad&&s.match!=null)?`<span class="pin" style="top:${s.match}%;background:${t.samples.reduce((b,x)=>Math.abs(x.p-s.match)<Math.abs(b.p-s.match)?x:b).hex}"></span>`:'';
+      const alts=(s.alts||[]).map(getThread).filter(Boolean).slice(0,4);
+      return`<figure class="slot"><div class="band ${t.metallic?'metal':''}" style="background:${t.fill}">${s.base?'<span class="tag">base</span>':''}<span class="num">${slots.findIndex(x=>x.s===s)+1}</span>${pin}</div>
+      <figcaption><b>${esc(label(t))}</b><span class="nm" title="${esc(t.name)}">${esc(t.name)}${t.grad?' · gradient':''}${t.metallic?' · metallic':''}</span>
+      <span class="q">${s.base?'Your starting thread':qual(s.de)}</span>
+      ${alts.length?`<div class="alts" title="Near-identical threads you also own">${alts.map(a=>`<span class="alt"><i style="background:${a.fill}"></i>${esc(label(a))}</span>`).join('')}</div>`:''}</figcaption></figure>`}).join('')}</div></article>`}
+
+function ensureSvg(){return S.svg||SAMPLE_SVG}
+function svgGroups(svg){const out=[],re=/^color[-_ ]?(\d+)$/i;
+  svg.querySelectorAll('*').forEach(e=>{if(e.closest('defs'))return;let n=null;
+    const dc=e.getAttribute('data-color');if(dc&&/^\d+$/.test(dc))n=+dc;
+    if(!n)for(const v of [e.getAttribute('id'),e.getAttribute('inkscape:label')]){const m=v&&v.match(re);if(m){n=+m[1];break}}
+    if(!n){const m=(e.getAttribute('class')||'').match(/(?:^|\s)color-?(\d+)(?:\s|$)/);if(m)n=+m[1]}
+    if(n)out.push({e,n})});return out}
+function svgColorCount(text){try{const d=new DOMParser().parseFromString(text,'image/svg+xml');return new Set(svgGroups(d.documentElement).map(x=>x.n)).size}catch(e){return 0}}
+function paintSVG(text,p){
+  const doc=new DOMParser().parseFromString(text,'image/svg+xml'),svg=doc.documentElement;
+  if(doc.querySelector('parsererror')||svg.localName!=='svg')return null;
+  svg.querySelectorAll('script,foreignObject').forEach(e=>e.remove());
+  svg.querySelectorAll('*').forEach(e=>[...e.attributes].forEach(a=>/^on/i.test(a.name)&&e.removeAttribute(a.name)));
+  const th=p.slots.map(s=>getThread(s.key)).filter(Boolean);if(!th.length)return null;
+  let VB=(svg.getAttribute('viewBox')||'').split(/[\s,]+/).map(Number);
+  if(VB.length!==4||VB.some(isNaN))VB=[0,0,parseFloat(svg.getAttribute('width'))||400,parseFloat(svg.getAttribute('height'))||400];
+  const NS='http://www.w3.org/2000/svg';let defs=svg.querySelector('defs');if(!defs){defs=doc.createElementNS(NS,'defs');svg.insertBefore(defs,svg.firstChild)}
+  const fills=th.map((t,i)=>{if(!t.grad)return t.hex;const g=doc.createElementNS(NS,'linearGradient');g.setAttribute('id','skg'+i);g.setAttribute('gradientUnits','userSpaceOnUse');g.setAttribute('x1',VB[0]);g.setAttribute('y1',VB[1]);g.setAttribute('x2',VB[0]+VB[2]);g.setAttribute('y2',VB[1]+VB[3]);
+    t.stops.forEach(s=>{const o=doc.createElementNS(NS,'stop');o.setAttribute('offset',s.p+'%');o.setAttribute('stop-color',s.hex);g.appendChild(o)});defs.appendChild(g);return`url(#skg${i})`});
+  const apply=(e,idx)=>{const f=fills[idx%fills.length];e.querySelectorAll('*').forEach(c=>{if(c.localName!=='stop'&&c.localName!=='linearGradient'){c.removeAttribute('fill');c.style.removeProperty('fill')}});e.setAttribute('fill',f);e.style.fill=f};
+  const marked=svgGroups(svg);
+  if(marked.length)marked.forEach(({e,n})=>apply(e,n-1));
+  else{const order=[];svg.querySelectorAll('*').forEach(e=>{if(e.closest('defs'))return;let f=(e.getAttribute('fill')||(e.style&&e.style.fill)||'').trim().toLowerCase();if(!f||f==='none'||f.startsWith('url'))return;let i=order.indexOf(f);if(i<0){order.push(f);i=order.length-1}e.setAttribute('fill',fills[i%fills.length]);e.style.fill=fills[i%fills.length]})}
+  const vb=VB;svg.setAttribute('viewBox',vb.join(' '));
+  svg.setAttribute('width',vb[2]);svg.setAttribute('height',vb[3]);if(!svg.getAttribute('xmlns'))svg.setAttribute('xmlns',NS);
+  return new XMLSerializer().serializeToString(svg)}
+
+function previewPanel(){const p=ui.pal,r=ui.result;
+  let body='<p class="hint">Generate a palette (or pick one from Saved), then press Preview to see it on your design.</p>';
+  if(p){const s=paintSVG(ensureSvg(),p);body=s||'<p class="hint">That SVG could not be read. Try another file or use the sample.</p>'}
+  return`<section class="pcard"><div class="prevhead"><div><h3>Preview</h3><p class="sub">${p?esc(p.harmony):'No palette selected'}</p></div>
+   <div class="acts">${p?`<button class="btn sm" data-act="mix" data-pid="${p.id}">⇄ Mix colors</button>`:''}
+   <button class="btn sm" data-act="loadSvg">Load SVG</button>${S.svg?'<button class="btn sm" data-act="sample">Use sample</button>':''}</div></div>
+   <div id="svgHost">${body}</div>
+   <label class="chk"><input type="checkbox" data-in="jpgprev" ${ui.jpgPrev?'checked':''}> Include this preview in JPG exports</label>
+   <p class="hint">Color shapes in your SVG by giving them ids <code>color-1</code>, <code>color-2</code>… (or <code>data-color="1"</code>, or Inkscape layer/group labels <code>color1</code>…). ${(()=>{const n=svgColorCount(ensureSvg());return n?`Your design has <b>${n}</b> color groups.`:''})()} Without ids, each distinct fill color is replaced in order.</p></section>`}
+
+function harmonyRow(){const r=ui.result;
+  return`<div class="hrow" role="tablist" aria-label="Harmony">${Object.entries(HARM).map(([k,v])=>`<button class="chip" role="tab" data-act="harm" data-k="${k}" aria-pressed="${ui.sel===k}" aria-selected="${ui.sel===k}" title="${v.name}">${{split:'Split-comp.',tetradic:'Tetradic'}[k]||v.name}</button>`).join('')}</div>`}
+function renderResults(){const host=$('#results');if(!host)return;const r=ui.result;
+  if(!r){host.innerHTML=`<div class="panel empty"><h2>Ready when you are</h2><p>Pick your base thread and options, then press Generate. All seven harmonies are built at once, so you can flip between them without generating again. Use Mix colors to reshuffle which thread goes on which color group.</p></div>${previewPanel()}`;return}
+  const pal=r.pals[ui.sel],short=pal.slots.length<r.n;
+  const note=[r.note,short?`Only ${pal.slots.length} distinct threads were available for this harmony (similar shades are grouped as alternates).`:''].filter(Boolean).join(' ');
+  host.innerHTML=`${harmonyRow()}${note?`<div class="panel hint">${esc(note)}</div>`:''}${paletteCard(pal)}${previewPanel()}`}
+function paletteText(p){const type=S.types.find(t=>t.id===p.typeId);
+  const L=[`Skein palette – ${p.harmony}`,`Yarn: ${type?type.name:''}`,''];
+  p.slots.forEach((s,i)=>{const t=getThread(s.key);if(!t)return;
+    L.push(`${i+1}. ${label(t)} – ${t.name}${t.grad?' (gradient '+t.stops.map(x=>x.hex).join(' → ')+')':'  '+t.hex}${t.metallic?' [metallic]':''}${s.base?' [base]':''}`);
+    const a=(s.alts||[]).map(getThread).filter(Boolean);if(a.length)L.push('   also close: '+a.map(label).join(', '))});
+  return L.join('\n')}
+function showText(title,text){$('#dlgT').textContent=title;$('#dlgTx').value=text;$('#dlg').showModal()}
+function download(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000)}
+
+function loadImg(svgStr){return new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svgStr)})}
+async function exportJPG(p){
+  const th=p.slots.map(s=>({s,t:getThread(s.key)})).filter(x=>x.t);if(!th.length)return;
+  const W=1200,pad=48,gap=16,n=th.length,bw=(W-pad*2-gap*(n-1))/n,bh=300,top=120;
+  let img=null,ph=0;
+  if(ui.jpgPrev){try{const s=paintSVG(ensureSvg(),p);if(s){img=await loadImg(s);ph=Math.min(680,(W-pad*2)*(img.height/img.width||1))}}catch(e){img=null}}
+  const H=top+bh+170+(img?ph+60:0);
+  const c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');
+  x.fillStyle='#f3f4f6';x.fillRect(0,0,W,H);
+  x.fillStyle='#14161b';x.font='800 36px system-ui,sans-serif';x.fillText(p.harmony,pad,64);
+  x.fillStyle='#566070';x.font='500 20px system-ui,sans-serif';const type=S.types.find(t=>t.id===p.typeId);
+  x.fillText(type?type.name:'',pad,98);
+  th.forEach(({s,t},i)=>{const bx=pad+i*(bw+gap),by=top;
+    x.save();x.beginPath();x.roundRect(bx,by,bw,bh,16);x.clip();
+    if(t.grad){const g=x.createLinearGradient(0,by,0,by+bh);t.stops.forEach(k=>g.addColorStop(k.p/100,k.hex));x.fillStyle=g}else x.fillStyle=t.hex;x.fillRect(bx,by,bw,bh);
+    const sh=x.createLinearGradient(bx,0,bx+bw,0);sh.addColorStop(0,'rgba(0,0,0,.2)');sh.addColorStop(.3,'rgba(255,255,255,.18)');sh.addColorStop(.55,'rgba(255,255,255,0)');sh.addColorStop(1,'rgba(0,0,0,.24)');x.fillStyle=sh;x.fillRect(bx,by,bw,bh);x.restore();
+    const wrap=(txt,w,max)=>{const words=txt.split(' '),lines=[];let cur='';
+      for(const wd of words){const nx=cur?cur+' '+wd:wd;if(x.measureText(nx).width>w&&cur){lines.push(cur);cur=wd}else cur=nx}
+      if(cur)lines.push(cur);if(lines.length>max){lines.length=max;let l=lines[max-1];while(l.length>2&&x.measureText(l+'…').width>w)l=l.slice(0,-1);lines[max-1]=l+'…'}return lines};
+    x.fillStyle='#14161b';x.font='700 22px system-ui,sans-serif';x.fillText((i+1)+'. '+label(t),bx,by+bh+34);
+    x.fillStyle='#566070';x.font='500 17px system-ui,sans-serif';let ly=by+bh+60;
+    wrap(t.name+(t.grad?' (gradient)':''),bw,2).forEach(l=>{x.fillText(l,bx,ly);ly+=22});
+    const a=(s.alts||[]).map(getThread).filter(Boolean).map(label).join(', ');
+    if(a){x.font='500 14px system-ui,sans-serif';ly+=4;wrap('also: '+a,bw,2).forEach(l=>{x.fillText(l,bx,ly);ly+=18})}});
+  if(img){const pw=Math.min(W-pad*2,ph*(img.width/img.height||1)),px=(W-pw)/2,py=top+bh+170;x.fillStyle='#fff';x.beginPath();x.roundRect(pad,py-10,W-pad*2,ph+20,16);x.fill();x.drawImage(img,px,py,pw,ph)}
+  c.toBlob(b=>{download(b,'skein-palette.jpg');toast('JPG saved')},'image/jpeg',.92)}
+
+/* ---------- views ---------- */
+function viewGen(){const type=curType();
+  if(!type)return`<div class="panel empty"><h2>Start with a yarn type</h2><p>Create a yarn type like "Size 10", then tick the threads you own.</p><button class="btn pri" data-act="tab" data-v="stash">Set up my threads</button></div>`;
+  const owned=ownedList(type),g=ui.gen,exs=new Set(type.excluded||[]);
+  const gdesc={avg:'Each gradient counts as its average color.',range:'A gradient matches if any shade along it fits (a dot marks the shade).',anchor:'A gradient thread is the base. Its hue sets the palette and solids fill in around it.'};
+  return`<div class="gen"><div class="panel ctrl">
+   <button class="btn pri go" data-act="gen">Generate palette</button>
+   <div class="field"><label for="cnt">Number of colors</label><div class="rangeline"><input id="cnt" type="range" min="3" max="8" value="${g.count}" data-in="count"><output id="cntV">${g.count}</output></div></div>
+   <div class="field"><span class="fl">Base thread</span><div class="bstrip"><button class="btile rand ${g.baseKey?'':'sel'}" data-act="base" data-key="">Random</button>${owned.map(t=>`<button class="btile ${g.baseKey===t.key?'sel':''} ${exs.has(t.key)?'ex':''}" data-act="base" data-key="${esc(t.key)}" style="background:${t.fill}" title="${esc(label(t)+' '+t.name)}" aria-label="${esc(label(t)+' '+t.name+(exs.has(t.key)?' (excluded)':''))}"></button>`).join('')}</div>
+   <p class="hint" style="margin-top:8px">Tap to choose a base. <b>Double-tap</b> a thread to exclude it (crossed out); double-tap again to include it.</p><p class="hint" id="exInfo">${exInfo(type)}</p>
+   ${owned.length-exs.size<3?'<p class="hint" style="margin-top:4px">You need at least 3 available threads in this type to generate.</p>':''}</div>
+   <div class="field"><span class="fl">Gradient threads</span><div class="seg">${[['avg','Average'],['range','Any shade'],['anchor','Anchor']].map(([k,n])=>`<button data-act="gmode" data-k="${k}" aria-pressed="${g.gmode===k}">${n}</button>`).join('')}</div><p class="hint" style="margin-top:6px">${gdesc[g.gmode]}</p></div>
+   <div><label class="switch"><span>Include gradient threads</span><input type="checkbox" data-in="grad" ${g.grad?'checked':''}></label>
+   <label class="switch"><span>Include metallic threads</span><input type="checkbox" data-in="metal" ${g.metal?'checked':''}></label></div></div>
+   <div class="results" id="results"></div></div>`}
+
+function viewSaved(){const favs=S.favorites.filter(f=>S.types.some(t=>t.id===f.typeId));
+  return`${favs.length?`<div class="cgrid">${favs.map(paletteCard).join('')}</div><div style="margin-top:20px">${previewPanel()}</div>`:`<div class="panel empty"><h2>No saved palettes yet</h2><p>Press Save on any generated palette and it will be kept in your stash file.</p></div>`}`}
+
+function viewStash(){const type=curType();
+  const admin=`<div class="typeadmin"><input type="text" id="newType" placeholder="New yarn type, e.g. Size 10" maxlength="40"><button class="btn pri" data-act="addType">Add yarn type</button>
+   ${type?`<button class="btn" data-act="renameType">Rename “${esc(type.name)}”</button><button class="btn ghost" data-act="delType">Delete</button>`:''}</div>`;
+  if(!type)return`<div class="panel empty"><h2>Name your first yarn type</h2><p>Yarn types separate what you own by size or weight, for example “Size 10” or “Size 20”.</p>${admin}</div>`;
+  const b=ui.browse,groups=[...new Set((b.src==='dmc'?DMC.solidColors:DMC.gradients).map(o=>o.group))];
+  return`${admin}<div class="stash"><section class="panel"><h2>Owned in “${esc(type.name)}” <span class="hint" id="ownCount"></span></h2><ul class="ownedlist" id="ownedList"></ul></section>
+   <section class="panel"><h2>Add threads</h2><div class="seg">${[['dmc','DMC solids'],['dmcg','DMC gradients'],['cus','My custom']].map(([k,n])=>`<button data-act="src" data-k="${k}" aria-pressed="${b.src===k}">${n}</button>`).join('')}</div>
+   <div class="browsebar"><input type="search" id="q" placeholder="Search number or name" value="${esc(b.q)}">${b.src==='cus'?'<span></span>':`<select id="grp" aria-label="Group"><option value="all">All groups</option>${groups.map(g=>`<option ${b.group===g?'selected':''}>${esc(g)}</option>`).join('')}</select>`}</div>
+   <div class="grid" id="grid"></div>
+   <details class="cust"><summary>Add a custom thread</summary><div class="cform">
+    <div><label for="cBrand">Brand</label><input type="text" id="cBrand" placeholder="e.g. Anchor, hand-dyed"></div><div><label for="cCode">Number / code</label><input type="text" id="cCode"></div>
+    <div class="full"><label for="cName">Name</label><input type="text" id="cName"></div>
+    <div><label for="cKind">Type</label><select id="cKind"><option value="solid">Solid color</option><option value="grad">Gradient</option></select></div>
+    <div id="cStopsW" style="display:none"><label for="cStops">Color stops</label><select id="cStops"><option>2</option><option>3</option><option>4</option></select></div>
+    <div class="full"><label>Color${'' }</label><div class="colors" id="cColors">${['#d94f6b','#f2b84b','#4fa3d9','#6bbf7a'].map((c,i)=>`<input type="color" id="cC${i}" value="${c}" ${i?'style="display:none"':''} aria-label="Color ${i+1}">`).join('')}</div></div>
+    <label class="chk full"><input type="checkbox" id="cMetal"> Metallic thread</label>
+    <div class="full"><label for="cNote">Note (optional)</label><input type="text" id="cNote" placeholder="e.g. 2 skeins left"></div>
+    <button class="btn pri full" data-act="addCustom">Add to “${esc(type.name)}”</button></div></details></section></div>`}
+
+function browseKeys(){const b=ui.browse,q=b.q.trim().toLowerCase();let keys;
+  if(b.src==='dmc')keys=DMC.solidColors.map(o=>'dmc:'+o.id);else if(b.src==='dmcg')keys=DMC.gradients.map(o=>'dmcg:'+o.id);else keys=S.custom.map(c=>'c:'+c.id);
+  return keys.map(getThread).filter(t=>t&&(b.src==='cus'||b.group==='all'||t.group.replace(' (gradient)','')===b.group)&&(!q||(t.code+' '+t.name).toLowerCase().includes(q)))}
+function renderGrid(){const g=$('#grid');if(!g)return;const type=curType(),own=new Set(type.threads.map(e=>e.key));const items=browseKeys();
+  g.innerHTML=items.length?items.map(t=>`<button class="tile ${own.has(t.key)?'on':''}" data-act="toggle" data-key="${esc(t.key)}" aria-pressed="${own.has(t.key)}"><span class="sw" style="background:${t.fill}"></span><b>${esc(label(t))}</b><small>${esc(t.name)}</small></button>`).join(''):'<p class="hint">Nothing matches. Custom threads you create appear here.</p>'}
+function renderOwned(){const l=$('#ownedList'),type=curType();if(!l)return;
+  l.innerHTML=type.threads.length?type.threads.map(e=>{const t=getThread(e.key);if(!t)return'';
+    return`<li class="own"><span class="sw" style="background:${t.fill}"></span><div class="meta"><b>${esc(label(t))}</b>${esc(t.name)}<span class="hint">${t.grad?' · gradient':''}${t.metallic?' · metallic':''}</span>
+    <input class="note" type="text" data-note="${esc(e.key)}" placeholder="Add a note" value="${esc(e.note||'')}" aria-label="Note for ${esc(label(t))}"></div>
+    <button class="x" data-act="remove" data-key="${esc(e.key)}" aria-label="Remove ${esc(label(t))}">✕</button></li>`}).join(''):'<li class="hint">No threads yet. Tap swatches on the right to add what you own.</li>';
+  const c=$('#ownCount');if(c)c.textContent=type.threads.length?`· ${type.threads.length}`:''}
+
+/* ---------- chrome / routing ---------- */
+function chrome(){
+  $('#dirty').classList.toggle('on',dirty);$('#saveBtn').classList.toggle('pri',dirty);
+  document.documentElement.dataset.theme=S.theme;
+  $$('.themes button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.t===S.theme));
+  $('#typeChips').innerHTML=(S.types.length?'<span class="lbl">Yarn type</span>':'')+S.types.map(t=>`<button class="chip" data-act="type" data-id="${t.id}" aria-pressed="${t.id===(curType()||{}).id}">${esc(t.name)}<small>${t.threads.length}</small></button>`).join('')+`<button class="chip" data-act="tab" data-v="stash">${S.types.length?'＋':'＋ Add a yarn type'}</button>`;
+  $$('.tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.v===ui.tab))}
+function render(){chrome();const v=$('#view');
+  v.innerHTML=ui.tab==='gen'?viewGen():ui.tab==='saved'?viewSaved():viewStash();
+  if(ui.tab==='gen')renderResults();if(ui.tab==='stash'&&curType()){renderOwned();renderGrid()}}
+$('.themes').innerHTML=['dark','mid','light'].map(t=>`<button data-act="theme" data-t="${t}" aria-label="${t} background"></button>`).join('');
+$('.tabs').innerHTML=[['gen','Generate'],['stash','My threads'],['saved','Saved palettes']].map(([k,n])=>`<button role="tab" data-act="tab" data-v="${k}">${n}</button>`).join('');
+
+/* ---------- actions ---------- */
+const exInfo=type=>{const n=(type.excluded||[]).filter(k=>type.threads.some(e=>e.key===k)).length;return n?`${n} thread${n>1?'s':''} excluded. <button class="btn sm ghost" data-act="exClear">Include all</button>`:''};
+function refreshStrip(){const type=curType(),ex=new Set(type.excluded||[]);
+  $$('.btile').forEach(x=>{const k=x.dataset.key;x.classList.toggle('sel',k===ui.gen.baseKey);if(k)x.classList.toggle('ex',ex.has(k))});
+  const i=$('#exInfo');if(i)i.innerHTML=exInfo(type)}
+const tapT={k:null,t:0};
+const A={
+  tab:b=>{ui.tab=b.dataset.v;render();window.scrollTo(0,0)},
+  type:b=>{ui.typeId=b.dataset.id;ui.result=null;ui.pal=null;ui.gen.baseKey='';render()},
+  theme:b=>{S.theme=b.dataset.t;chrome()},
+  harm:b=>{if(!ui.result)return;ui.sel=b.dataset.k;ui.pal=ui.result.pals[ui.sel];const sc=window.scrollY;renderResults();window.scrollTo(0,sc)},
+  gmode:b=>{ui.gen.gmode=b.dataset.k;const y=$('#view');const sc=window.scrollY;render();window.scrollTo(0,sc)},
+  base:b=>{const k=b.dataset.key,type=curType(),now=Date.now();
+    if(k&&tapT.k===k&&now-tapT.t<400){tapT.k=null;const ex=type.excluded||(type.excluded=[]),i=ex.indexOf(k);
+      if(i>=0)ex.splice(i,1);else{ex.push(k);if(ui.gen.baseKey===k)ui.gen.baseKey=''}
+      mark();refreshStrip();return}
+    tapT.k=k;tapT.t=now;if(k&&(type.excluded||[]).includes(k))return;
+    ui.gen.baseKey=k;refreshStrip()},
+  exClear:()=>{curType().excluded=[];mark();refreshStrip()},
+  gen:()=>generate(),
+  star:b=>{const p=REG.get(b.dataset.pid);if(!p)return;const s=sig(p),i=S.favorites.findIndex(f=>sig(f)===s);
+    if(i>=0){S.favorites.splice(i,1);toast('Removed from saved')}else{S.favorites.push({...p,id:'f'+uid(),created:Date.now()});toast('Saved. Remember to save your stash file.')}
+    mark();ui.tab==='saved'?render():renderResults()},
+  prev:b=>{ui.pal=REG.get(b.dataset.pid);ui.tab==='gen'?renderResults():render();setTimeout(()=>$('#svgHost')?.scrollIntoView({behavior:'smooth',block:'center'}),30)},
+  mix:b=>{const p=REG.get(b.dataset.pid);if(!p||p.slots.length<2)return;
+    const idx=[...p.slots.keys()];let perm;do{perm=shuffle(idx)}while(perm.some((v,i)=>v===i));
+    p.slots=perm.map(i=>p.slots[i]);ui.pal=p;if(S.favorites.includes(p))mark();
+    const sc=window.scrollY;ui.tab==='gen'?renderResults():render();window.scrollTo(0,sc)},
+  list:b=>{const p=REG.get(b.dataset.pid);if(p)showText('Palette list',paletteText(p))},
+  jpg:b=>{const p=REG.get(b.dataset.pid);if(p)exportJPG(p)},
+  loadSvg:()=>$('#svgIn').click(),
+  sample:()=>{S.svg=null;mark();ui.tab==='gen'?renderResults():render()},
+  src:b=>{ui.browse={src:b.dataset.k,group:'all',q:''};render()},
+  toggle:b=>{const type=curType(),k=b.dataset.key,i=type.threads.findIndex(e=>e.key===k);
+    if(i>=0)type.threads.splice(i,1);else type.threads.push({key:k,note:''});
+    b.classList.toggle('on',i<0);b.setAttribute('aria-pressed',i<0);mark();renderOwned()},
+  remove:b=>{const type=curType();type.threads=type.threads.filter(e=>e.key!==b.dataset.key);mark();renderOwned();renderGrid()},
+  addType:()=>{const el=$('#newType'),n=el.value.trim();if(!n){toast('Type a name first, for example Size 10.');el.focus();return}
+    const t={id:uid(),name:n,threads:[]};S.types.push(t);ui.typeId=t.id;ui.result=null;mark();render()},
+  renameType:()=>{const t=curType(),n=prompt('Rename yarn type',t.name);if(n&&n.trim()){t.name=n.trim().slice(0,40);mark();render()}},
+  delType:()=>{const t=curType();if(!confirm(`Delete “${t.name}” and its ${t.threads.length} threads? Saved palettes for it are removed too.`))return;
+    S.types=S.types.filter(x=>x.id!==t.id);S.favorites=S.favorites.filter(f=>f.typeId!==t.id);ui.typeId=null;ui.result=null;ui.pal=null;mark();render()},
+  addCustom:()=>{const type=curType();if(!type){toast('Create a yarn type first.');return}
+    const name=$('#cName').value.trim(),code=$('#cCode').value.trim();if(!name&&!code){toast('Give the thread a name or number.');return}
+    const grad=$('#cKind').value==='grad',cnt=grad?+$('#cStops').value:1;
+    const id=uid();S.custom.push({id,brand:$('#cBrand').value.trim(),code,name,metallic:$('#cMetal').checked,hexes:[...Array(cnt)].map((_,i)=>$('#cC'+i).value)});
+    type.threads.push({key:'c:'+id,note:$('#cNote').value.trim()});mark();toast('Custom thread added');
+    ['#cBrand','#cCode','#cName','#cNote'].forEach(s=>$(s).value='');renderOwned();renderGrid();chrome()},
+  save:()=>{const data={app:'skein-palette',version:1,types:S.types,custom:S.custom,favorites:S.favorites,svg:S.svg,theme:S.theme};
+    download(new Blob([JSON.stringify(data,null,1)],{type:'application/json'}),'skein-stash.json');dirty=false;chrome();toast('Stash file saved')},
+  load:()=>$('#fileIn').click(),
+  dlgCopy:async()=>{const tx=$('#dlgTx');try{await navigator.clipboard.writeText(tx.value)}catch(e){tx.select();document.execCommand('copy')}toast('Copied')},
+  dlgSave:()=>download(new Blob([$('#dlgTx').value],{type:'text/plain'}),'skein-palette.txt'),
+  dlgClose:()=>$('#dlg').close()
+};
+document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(b&&A[b.dataset.act])A[b.dataset.act](b,e)});
+document.addEventListener('input',e=>{const t=e.target;
+  if(t.dataset.in==='count'){ui.gen.count=+t.value;$('#cntV').textContent=t.value}
+  if(t.id==='q'){ui.browse.q=t.value;renderGrid()}});
+document.addEventListener('change',e=>{const t=e.target,d=t.dataset;
+  if(d.in==='grad')ui.gen.grad=t.checked;if(d.in==='metal')ui.gen.metal=t.checked;if(d.in==='jpgprev')ui.jpgPrev=t.checked;
+  if(t.id==='grp'){ui.browse.group=t.value;renderGrid()}
+  if(d.note){const en=curType().threads.find(x=>x.key===d.note);if(en){en.note=t.value;mark()}}
+  if(t.id==='cKind'||t.id==='cStops'){const g=$('#cKind').value==='grad',n=g?+$('#cStops').value:1;$('#cStopsW').style.display=g?'':'none';[0,1,2,3].forEach(i=>$('#cC'+i).style.display=i<n?'':'none')}
+  if(t.id==='fileIn'&&t.files[0]){const f=t.files[0];t.value='';
+    if(dirty&&!confirm('You have unsaved changes. Loading a file replaces the current stash. Continue?'))return;
+    f.text().then(tx=>{try{const d=JSON.parse(tx);if(!Array.isArray(d.types))throw 0;
+      S={types:d.types,custom:d.custom||[],favorites:d.favorites||[],svg:d.svg||null,theme:d.theme||S.theme};TC.clear();REG.clear();
+      ui.typeId=null;ui.result=null;ui.pal=null;ui.gen.baseKey='';dirty=false;ui.tab=S.types.length?'gen':'stash';render();toast('Stash loaded')}catch(err){toast('That file is not a Skein stash.')}})}
+  if(t.id==='svgIn'&&t.files[0]){const f=t.files[0];t.value='';f.text().then(tx=>{if(!paintSVG(tx,{slots:[{key:'dmc:310'}]})){toast('That SVG could not be read.');return}
+    S.svg=tx;const nc=svgColorCount(tx);if(nc>=3){ui.gen.count=Math.min(8,nc)}mark();render();toast(nc?`SVG loaded: ${nc} color groups found`+(nc>8?' (palettes max out at 8)':', color count set to '+Math.min(8,Math.max(3,nc))):'SVG loaded (no color groups found, fills are replaced in order)')})}});
+window.addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue=''}});
+ui.tab='stash';render();
+</script>
+</body>
+</html>

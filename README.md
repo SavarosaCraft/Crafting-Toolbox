@@ -9,7 +9,7 @@ Create a list of your owned yarns and threads, then create palettes from them.
 
 ![Skein screenshot](Skein/Screenshot.jpg)
 
-![Skein palette screenshot](skein-palette.jpg)
+![Skein palette screenshot](Skein/skein-palette.jpg)
 
 [**Download Skein**](downloads/Skein.zip)
 Just download and run 

@@ -27,6 +27,7 @@ h1,h2,h3,p{margin:0}
 .btn{min-height:44px;padding:0 18px;border-radius:12px;border:1px solid var(--line);background:var(--panel);font-weight:600;display:inline-flex;align-items:center;gap:8px;justify-content:center}
 .btn:active{transform:translateY(1px)}
 .btn.pri{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn:disabled{opacity:.4;cursor:default}
 .btn.sm{min-height:38px;padding:0 12px;font-size:14px}
 .btn.ghost{background:transparent}
 .dirty{display:none;align-items:center;gap:8px;font-size:14px;font-weight:600}
@@ -45,7 +46,7 @@ h1,h2,h3,p{margin:0}
 .tabs{display:flex;gap:4px}
 .tabs button{min-height:46px;padding:0 20px;border:0;background:transparent;font-weight:700;color:var(--ink2);border-bottom:3px solid transparent}
 .tabs button[aria-selected=true]{color:var(--ink);border-bottom-color:var(--accent)}
-main{padding:22px 0 80px}
+main{padding:22px 0 40px}
 .panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px}
 .panel h2{font-size:18px;font-weight:700;margin-bottom:12px}
 .hint{color:var(--ink2);font-size:14px}
@@ -105,6 +106,7 @@ input[type=range]{width:100%;height:44px;accent-color:var(--accent)}
 .slot figcaption{padding-top:10px;font-size:14px;line-height:1.35}
 .slot figcaption b{display:block;font-size:16px}
 .slot .nm{display:block;color:var(--ink2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.slot .nt{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere;font-style:italic;font-size:13px;color:var(--ink2);margin-top:4px}
 .slot .q{display:block;font-size:13px;font-weight:600;margin-top:2px}
 .alts{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
 .alt{display:inline-flex;align-items:center;gap:5px;font-size:12px;padding:2px 8px 2px 3px;border-radius:999px;background:var(--panel2);border:1px solid var(--line)}
@@ -122,12 +124,14 @@ input[type=range]{width:100%;height:44px;accent-color:var(--accent)}
 input[type=text],input[type=search],select,textarea{min-height:44px;padding:8px 12px;border-radius:12px;border:1px solid var(--line);background:var(--panel2);width:100%}
 input[type=color]{width:56px;height:44px;padding:2px;border-radius:10px;border:1px solid var(--line);background:var(--panel2)}
 .ownedlist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;max-height:70vh;overflow:auto}
-.own{display:grid;grid-template-columns:54px 1fr 40px;gap:10px;align-items:center;padding:8px;border-radius:12px;background:var(--panel2);border:1px solid var(--line)}
+.own{display:grid;grid-template-columns:54px 1fr auto;gap:10px;align-items:center;padding:8px;border-radius:12px;background:var(--panel2);border:1px solid var(--line)}
 .own .sw{width:54px;height:54px;border-radius:10px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.25)}
 .own .meta b{margin-right:6px}
 .own .meta{min-width:0}
 .own input.note{margin-top:6px;min-height:38px;font-size:14px;background:var(--panel)}
-.own .x{width:40px;height:40px;border-radius:10px;border:1px solid var(--line);background:var(--panel)}
+.own .ctl{display:flex;gap:6px;align-self:start}
+.own .x{width:42px;height:42px;border-radius:10px;border:1px solid var(--line);background:var(--panel)}
+.own .x:disabled{opacity:.35;cursor:default}
 .browsebar{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
 .browsebar .full{grid-column:1/-1}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px;max-height:60vh;overflow:auto;padding:2px}
@@ -147,6 +151,8 @@ details.cust summary{min-height:44px;display:flex;align-items:center;font-weight
 .chk input{width:22px;height:22px;accent-color:var(--accent)}
 .cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(420px,1fr));gap:20px}
 @media(max-width:520px){.cgrid{grid-template-columns:1fr}}
+.foot{border-top:1px solid var(--line);padding:22px 20px 40px;text-align:center;color:var(--ink2);font-size:14px;display:flex;flex-direction:column;gap:6px}
+.foot a{color:var(--ink);font-weight:700;text-underline-offset:3px}
 /* dialog + toast */
 dialog{border:1px solid var(--line);border-radius:16px;background:var(--panel);color:var(--ink);width:min(560px,92vw);padding:18px}
 dialog::backdrop{background:rgba(0,0,0,.55)}
@@ -172,6 +178,10 @@ dialog .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;justify-content:
   <nav class="tabs" role="tablist"></nav>
 </div></header>
 <main class="wrap" id="view"></main>
+<footer class="foot wrap">
+  <p>Skein is free, and part of the <a href="https://github.com/SavarosaCraft/Crafting-Toolbox" target="_blank" rel="noopener noreferrer">Crafting Toolbox</a> by Savarosa Craft. Find the code on <a href="https://github.com/SavarosaCraft/Crafting-Toolbox" target="_blank" rel="noopener noreferrer">GitHub</a>.</p>
+  <p>If it helped you pick a palette you love, you can <a href="https://ko-fi.com/savarosacraft" target="_blank" rel="noopener noreferrer">buy me a coffee on Ko-fi</a> ☕. Thank you, and happy stitching!</p>
+</footer>
 <dialog id="dlg"><h2 id="dlgT" style="margin:0 0 10px;font-size:18px"></h2><textarea id="dlgTx" readonly></textarea>
   <div class="row"><button class="btn" data-act="dlgCopy">Copy</button><button class="btn" data-act="dlgSave">Save .txt</button><button class="btn pri" data-act="dlgClose">Close</button></div></dialog>
 <div id="toast" role="status"></div>
@@ -255,7 +265,7 @@ function makeTargets(hk,n,base,gmode,bal){
   let offs;
   if(hk==='analogous')offs=[25,-25,50,-50,75,-75,12,-12].slice(0,m);
   else{const a=HARM[hk].off,k=a.length;offs=[...Array(m)].map((_,j)=>{const i=j+1,r=Math.floor(i/k);return a[i%k]+(r?(r%2?1:-1)*8*r:0)})}
-  const Ls=bal?shuffle(linspace(18,90,m)):[...Array(m)].map(()=>clamp(bL+rnd(-24,24),14,93));
+  const Ls=bal?(m===1?[bL>55?rnd(18,36):rnd(76,90)]:shuffle(linspace(18,90,m))):[...Array(m)].map(()=>clamp(bL+rnd(-24,24),14,93));
   return offs.map((o,i)=>{const C=mono?bC*rnd(.8,1.15):neutral?rnd(26,50):clamp(bC*rnd(.75,1.2),14,75),h=(H0+o+360)%360*Math.PI/180;
     return[Ls[i],C*Math.cos(h),C*Math.sin(h)]})}
 function buildSlots(pool,base,hk,n,gmode,bal){
@@ -270,7 +280,7 @@ function buildSlots(pool,base,hk,n,gmode,bal){
   return slots}
 function generate(){
   const type=curType(),exs=new Set(type.excluded||[]),owned=ownedList(type).filter(t=>!exs.has(t.key)),g=ui.gen;
-  if(owned.length<3){toast('You need at least 3 threads that are not excluded in this yarn type.');return}
+  if(owned.length<2){toast('You need at least 2 threads that are not excluded in this yarn type.');return}
   const n=g.count;let gmode=g.gmode;
   const pool=owned.filter(t=>(g.grad||!t.grad)&&(g.metal||!t.metallic));
   let base=g.baseKey?owned.find(t=>t.key===g.baseKey):null;
@@ -286,6 +296,7 @@ function generate(){
   $('#results')?.scrollIntoView({behavior:'smooth',block:'start'})}
 
 /* ---------- palette rendering ---------- */
+const noteOf=(p,key)=>{const ty=S.types.find(x=>x.id===p.typeId),e=ty&&ty.threads.find(x=>x.key===key);return(e&&e.note||'').trim()};
 const qual=d=>d<2?'Exact match':d<5?'Very close':d<10?'Close match':'Loose match';
 const sig=p=>p.typeId+'|'+p.variant+'|'+p.slots.map(s=>s.key).join(',');
 const isFav=p=>S.favorites.some(f=>sig(f)===sig(p));
@@ -294,7 +305,7 @@ function paletteCard(p){REG.set(p.id,p);
   const slots=p.slots.map(s=>({s,t:getThread(s.key)})).filter(x=>x.t);
   const lights=slots.map(x=>x.t.lab[0]),mix=Math.min(...lights)<35&&Math.max(...lights)>75;
   return`<article class="pcard" data-pid="${p.id}"><header><div><h3>${esc(p.harmony)}</h3>
-    <p class="sub">${p.variant==='pure'?'True harmony · ':''}${esc(type?type.name:'')} · ${slots.length} threads${mix?' · includes light and dark threads':''}</p></div>
+    <p class="sub">${slots.length===2?'Pair: your base plus its '+esc(p.harmony.split(' (')[0].toLowerCase())+' partner · ':''}${p.variant==='pure'?'True harmony · ':''}${esc(type?type.name:'')} · ${slots.length===2?'':slots.length+' threads'}${mix?(slots.length===2?'':' · ')+'includes light and dark threads':''}</p></div>
     <div class="acts"><button class="btn sm ${fav?'on':''}" data-act="star" data-pid="${p.id}" aria-pressed="${fav}">${fav?'★ Saved':'☆ Save'}</button>
     <button class="btn sm" data-act="mix" data-pid="${p.id}">⇄ Mix colors</button>${ui.tab==='saved'?`<button class="btn sm" data-act="prev" data-pid="${p.id}">Preview</button>`:''}
     <button class="btn sm" data-act="list" data-pid="${p.id}">Text list</button>
@@ -304,7 +315,7 @@ function paletteCard(p){REG.set(p.id,p);
       const alts=(s.alts||[]).map(getThread).filter(Boolean).slice(0,4);
       return`<figure class="slot"><div class="band ${t.metallic?'metal':''}" style="background:${t.fill}">${s.base?'<span class="tag">base</span>':''}<span class="num">${slots.findIndex(x=>x.s===s)+1}</span>${pin}</div>
       <figcaption><b>${esc(label(t))}</b><span class="nm" title="${esc(t.name)}">${esc(t.name)}${t.grad?' · gradient':''}${t.metallic?' · metallic':''}</span>
-      <span class="q">${s.base?'Your starting thread':qual(s.de)}</span>
+      <span class="q">${s.base?'Your starting thread':qual(s.de)}</span>${noteOf(p,t.key)?`<span class="nt">${esc(noteOf(p,t.key))}</span>`:''}
       ${alts.length?`<div class="alts" title="Near-identical threads you also own">${alts.map(a=>`<span class="alt"><i style="background:${a.fill}"></i>${esc(label(a))}</span>`).join('')}</div>`:''}</figcaption></figure>`}).join('')}</div></article>`}
 
 function ensureSvg(){return S.svg||SAMPLE_SVG}
@@ -355,7 +366,9 @@ function paletteText(p){const type=S.types.find(t=>t.id===p.typeId);
   const L=[`Skein palette – ${p.harmony}`,`Yarn: ${type?type.name:''}`,''];
   p.slots.forEach((s,i)=>{const t=getThread(s.key);if(!t)return;
     L.push(`${i+1}. ${label(t)} – ${t.name}${t.grad?' (gradient '+t.stops.map(x=>x.hex).join(' → ')+')':'  '+t.hex}${t.metallic?' [metallic]':''}${s.base?' [base]':''}`);
+    const nt=noteOf(p,s.key);if(nt)L.push('   note: '+nt.replace(/\s+/g,' '));
     const a=(s.alts||[]).map(getThread).filter(Boolean);if(a.length)L.push('   also close: '+a.map(label).join(', '))});
+  L.push('','Made with Skein · free to download on GitHub: https://github.com/SavarosaCraft/Crafting-Toolbox');
   return L.join('\n')}
 function showText(title,text){$('#dlgT').textContent=title;$('#dlgTx').value=text;$('#dlg').showModal()}
 function download(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000)}
@@ -366,7 +379,7 @@ async function exportJPG(p){
   const W=1200,pad=48,gap=16,n=th.length,bw=(W-pad*2-gap*(n-1))/n,bh=300,top=120;
   let img=null,ph=0;
   if(ui.jpgPrev){try{const s=paintSVG(ensureSvg(),p);if(s){img=await loadImg(s);ph=Math.min(680,(W-pad*2)*(img.height/img.width||1))}}catch(e){img=null}}
-  const H=top+bh+170+(img?ph+60:0);
+  const H=top+bh+220+(img?ph+60:0)+44;
   const c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');
   x.fillStyle='#f3f4f6';x.fillRect(0,0,W,H);
   x.fillStyle='#14161b';x.font='800 36px system-ui,sans-serif';x.fillText(p.harmony,pad,64);
@@ -382,9 +395,14 @@ async function exportJPG(p){
     x.fillStyle='#14161b';x.font='700 22px system-ui,sans-serif';x.fillText((i+1)+'. '+label(t),bx,by+bh+34);
     x.fillStyle='#566070';x.font='500 17px system-ui,sans-serif';let ly=by+bh+60;
     wrap(t.name+(t.grad?' (gradient)':''),bw,2).forEach(l=>{x.fillText(l,bx,ly);ly+=22});
+    const nt=noteOf(p,s.key);if(nt){x.fillStyle='#14161b';x.font='italic 500 15px system-ui,sans-serif';ly+=2;wrap(nt,bw,2).forEach(l=>{x.fillText(l,bx,ly);ly+=19})}
+    x.fillStyle='#566070';
     const a=(s.alts||[]).map(getThread).filter(Boolean).map(label).join(', ');
     if(a){x.font='500 14px system-ui,sans-serif';ly+=4;wrap('also: '+a,bw,2).forEach(l=>{x.fillText(l,bx,ly);ly+=18})}});
-  if(img){const pw=Math.min(W-pad*2,ph*(img.width/img.height||1)),px=(W-pw)/2,py=top+bh+170;x.fillStyle='#fff';x.beginPath();x.roundRect(pad,py-10,W-pad*2,ph+20,16);x.fill();x.drawImage(img,px,py,pw,ph)}
+  if(img){const pw=Math.min(W-pad*2,ph*(img.width/img.height||1)),px=(W-pw)/2,py=top+bh+220;x.fillStyle='#fff';x.beginPath();x.roundRect(pad,py-10,W-pad*2,ph+20,16);x.fill();x.drawImage(img,px,py,pw,ph)}
+  x.fillStyle='#d6dae1';x.fillRect(pad,H-52,W-pad*2,1);
+  x.fillStyle='#8a92a0';x.font='500 15px system-ui,sans-serif';x.textAlign='right';
+  x.fillText('Made with Skein  ·  free to download on GitHub: github.com/SavarosaCraft/Crafting-Toolbox',W-pad,H-24);x.textAlign='left';
   c.toBlob(b=>{download(b,'skein-palette.jpg');toast('JPG saved')},'image/jpeg',.92)}
 
 /* ---------- views ---------- */
@@ -394,10 +412,10 @@ function viewGen(){const type=curType();
   const gdesc={avg:'Each gradient counts as its average color.',range:'A gradient matches if any shade along it fits (a dot marks the shade).',anchor:'A gradient thread is the base. Its hue sets the palette and solids fill in around it.'};
   return`<div class="gen"><div class="panel ctrl">
    <button class="btn pri go" data-act="gen">Generate palette</button>
-   <div class="field"><label for="cnt">Number of colors</label><div class="rangeline"><input id="cnt" type="range" min="3" max="8" value="${g.count}" data-in="count"><output id="cntV">${g.count}</output></div></div>
+   <div class="field"><label for="cnt">Number of colors</label><div class="rangeline"><input id="cnt" type="range" min="2" max="8" value="${g.count}" data-in="count"><output id="cntV">${g.count}</output></div></div>
    <div class="field"><span class="fl">Base thread</span><div class="bstrip"><button class="btile rand ${g.baseKey?'':'sel'}" data-act="base" data-key="">Random</button>${owned.map(t=>`<button class="btile ${g.baseKey===t.key?'sel':''} ${exs.has(t.key)?'ex':''}" data-act="base" data-key="${esc(t.key)}" style="background:${t.fill}" title="${esc(label(t)+' '+t.name)}" aria-label="${esc(label(t)+' '+t.name+(exs.has(t.key)?' (excluded)':''))}"></button>`).join('')}</div>
    <p class="hint" style="margin-top:8px">Tap to choose a base. <b>Double-tap</b> a thread to exclude it (crossed out); double-tap again to include it.</p><p class="hint" id="exInfo">${exInfo(type)}</p>
-   ${owned.length-exs.size<3?'<p class="hint" style="margin-top:4px">You need at least 3 available threads in this type to generate.</p>':''}</div>
+   ${owned.length-exs.size<2?'<p class="hint" style="margin-top:4px">You need at least 2 available threads in this type to generate.</p>':''}</div>
    <div class="field"><span class="fl">Gradient threads</span><div class="seg">${[['avg','Average'],['range','Any shade'],['anchor','Anchor']].map(([k,n])=>`<button data-act="gmode" data-k="${k}" aria-pressed="${g.gmode===k}">${n}</button>`).join('')}</div><p class="hint" style="margin-top:6px">${gdesc[g.gmode]}</p></div>
    <div><label class="switch"><span>Include gradient threads</span><input type="checkbox" data-in="grad" ${g.grad?'checked':''}></label>
    <label class="switch"><span>Include metallic threads</span><input type="checkbox" data-in="metal" ${g.metal?'checked':''}></label></div></div>
@@ -408,7 +426,7 @@ function viewSaved(){const favs=S.favorites.filter(f=>S.types.some(t=>t.id===f.t
 
 function viewStash(){const type=curType();
   const admin=`<div class="typeadmin"><input type="text" id="newType" placeholder="New yarn type, e.g. Size 10" maxlength="40"><button class="btn pri" data-act="addType">Add yarn type</button>
-   ${type?`<button class="btn" data-act="renameType">Rename “${esc(type.name)}”</button><button class="btn ghost" data-act="delType">Delete</button>`:''}</div>`;
+   ${type?`<button class="btn" data-act="renameType">Rename “${esc(type.name)}”</button>${S.types.length>1?`<button class="btn" data-act="moveType" data-d="-1" ${S.types.indexOf(type)===0?'disabled':''} aria-label="Move ${esc(type.name)} earlier">◀ Move earlier</button><button class="btn" data-act="moveType" data-d="1" ${S.types.indexOf(type)===S.types.length-1?'disabled':''} aria-label="Move ${esc(type.name)} later">Move later ▶</button>`:''}<button class="btn ghost" data-act="delType">Delete</button>`:''}</div>`;
   if(!type)return`<div class="panel empty"><h2>Name your first yarn type</h2><p>Yarn types separate what you own by size or weight, for example “Size 10” or “Size 20”.</p>${admin}</div>`;
   const b=ui.browse,groups=[...new Set((b.src==='dmc'?DMC.solidColors:DMC.gradients).map(o=>o.group))];
   return`${admin}<div class="stash"><section class="panel"><h2>Owned in “${esc(type.name)}” <span class="hint" id="ownCount"></span></h2><ul class="ownedlist" id="ownedList"></ul></section>
@@ -431,10 +449,10 @@ function browseKeys(){const b=ui.browse,q=b.q.trim().toLowerCase();let keys;
 function renderGrid(){const g=$('#grid');if(!g)return;const type=curType(),own=new Set(type.threads.map(e=>e.key));const items=browseKeys();
   g.innerHTML=items.length?items.map(t=>`<button class="tile ${own.has(t.key)?'on':''}" data-act="toggle" data-key="${esc(t.key)}" aria-pressed="${own.has(t.key)}"><span class="sw" style="background:${t.fill}"></span><b>${esc(label(t))}</b><small>${esc(t.name)}</small></button>`).join(''):'<p class="hint">Nothing matches. Custom threads you create appear here.</p>'}
 function renderOwned(){const l=$('#ownedList'),type=curType();if(!l)return;
-  l.innerHTML=type.threads.length?type.threads.map(e=>{const t=getThread(e.key);if(!t)return'';
+  l.innerHTML=type.threads.length?type.threads.map((e,idx)=>{const t=getThread(e.key);if(!t)return'';const last=type.threads.length-1;
     return`<li class="own"><span class="sw" style="background:${t.fill}"></span><div class="meta"><b>${esc(label(t))}</b>${esc(t.name)}<span class="hint">${t.grad?' · gradient':''}${t.metallic?' · metallic':''}</span>
     <input class="note" type="text" data-note="${esc(e.key)}" placeholder="Add a note" value="${esc(e.note||'')}" aria-label="Note for ${esc(label(t))}"></div>
-    <button class="x" data-act="remove" data-key="${esc(e.key)}" aria-label="Remove ${esc(label(t))}">✕</button></li>`}).join(''):'<li class="hint">No threads yet. Tap swatches on the right to add what you own.</li>';
+    <div class="ctl"><button class="x" data-act="moveThread" data-d="-1" data-key="${esc(e.key)}" ${idx===0?'disabled':''} aria-label="Move ${esc(label(t))} up">▲</button><button class="x" data-act="moveThread" data-d="1" data-key="${esc(e.key)}" ${idx===last?'disabled':''} aria-label="Move ${esc(label(t))} down">▼</button><button class="x" data-act="remove" data-key="${esc(e.key)}" aria-label="Remove ${esc(label(t))}">✕</button></div></li>`}).join(''):'<li class="hint">No threads yet. Tap swatches on the right to add what you own.</li>';
   const c=$('#ownCount');if(c)c.textContent=type.threads.length?`· ${type.threads.length}`:''}
 
 /* ---------- chrome / routing ---------- */
@@ -486,10 +504,17 @@ const A={
   toggle:b=>{const type=curType(),k=b.dataset.key,i=type.threads.findIndex(e=>e.key===k);
     if(i>=0)type.threads.splice(i,1);else type.threads.push({key:k,note:''});
     b.classList.toggle('on',i<0);b.setAttribute('aria-pressed',i<0);mark();renderOwned()},
+  moveThread:b=>{const type=curType(),k=b.dataset.key,d=+b.dataset.d,i=type.threads.findIndex(e=>e.key===k),j=i+d;
+    if(i<0||j<0||j>=type.threads.length)return;
+    const [e]=type.threads.splice(i,1);type.threads.splice(j,0,e);mark();renderOwned();
+    const pick=[...$$('[data-act=moveThread]')].filter(x=>x.dataset.key===k);
+    (pick.find(x=>x.dataset.d===b.dataset.d&&!x.disabled)||pick.find(x=>!x.disabled)||pick[0])?.focus()},
   remove:b=>{const type=curType();type.threads=type.threads.filter(e=>e.key!==b.dataset.key);mark();renderOwned();renderGrid()},
   addType:()=>{const el=$('#newType'),n=el.value.trim();if(!n){toast('Type a name first, for example Size 10.');el.focus();return}
     const t={id:uid(),name:n,threads:[]};S.types.push(t);ui.typeId=t.id;ui.result=null;mark();render()},
   renameType:()=>{const t=curType(),n=prompt('Rename yarn type',t.name);if(n&&n.trim()){t.name=n.trim().slice(0,40);mark();render()}},
+  moveType:b=>{const t=curType(),i=S.types.indexOf(t),j=i+(+b.dataset.d);if(j<0||j>=S.types.length)return;
+    S.types.splice(i,1);S.types.splice(j,0,t);mark();const sc=window.scrollY;render();window.scrollTo(0,sc)},
   delType:()=>{const t=curType();if(!confirm(`Delete “${t.name}” and its ${t.threads.length} threads? Saved palettes for it are removed too.`))return;
     S.types=S.types.filter(x=>x.id!==t.id);S.favorites=S.favorites.filter(f=>f.typeId!==t.id);ui.typeId=null;ui.result=null;ui.pal=null;mark();render()},
   addCustom:()=>{const type=curType();if(!type){toast('Create a yarn type first.');return}
@@ -520,7 +545,7 @@ document.addEventListener('change',e=>{const t=e.target,d=t.dataset;
       S={types:d.types,custom:d.custom||[],favorites:d.favorites||[],svg:d.svg||null,theme:d.theme||S.theme};TC.clear();REG.clear();
       ui.typeId=null;ui.result=null;ui.pal=null;ui.gen.baseKey='';dirty=false;ui.tab=S.types.length?'gen':'stash';render();toast('Stash loaded')}catch(err){toast('That file is not a Skein stash.')}})}
   if(t.id==='svgIn'&&t.files[0]){const f=t.files[0];t.value='';f.text().then(tx=>{if(!paintSVG(tx,{slots:[{key:'dmc:310'}]})){toast('That SVG could not be read.');return}
-    S.svg=tx;const nc=svgColorCount(tx);if(nc>=3){ui.gen.count=Math.min(8,nc)}mark();render();toast(nc?`SVG loaded: ${nc} color groups found`+(nc>8?' (palettes max out at 8)':', color count set to '+Math.min(8,Math.max(3,nc))):'SVG loaded (no color groups found, fills are replaced in order)')})}});
+    S.svg=tx;const nc=svgColorCount(tx);if(nc>=2){ui.gen.count=Math.min(8,nc)}mark();render();toast(nc?`SVG loaded: ${nc} color groups found`+(nc>8?' (palettes max out at 8)':', color count set to '+Math.min(8,Math.max(2,nc))):'SVG loaded (no color groups found, fills are replaced in order)')})}});
 window.addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue=''}});
 ui.tab='stash';render();
 </script>

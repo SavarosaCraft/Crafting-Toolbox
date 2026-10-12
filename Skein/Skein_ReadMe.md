@@ -28,7 +28,7 @@ At the top you'll also find three round buttons to change the background to dark
 
 A yarn type is a label for a group of threads, such as "Size 10" or "Size 20". Each yarn type has its own list of owned threads.
 
-Go to **My threads**, type a name and press **Add yarn type**. Your yarn types appear as buttons at the top of the page. Tap one to switch to it. You can rename or delete the current one from the My threads tab.
+Go to **My threads**, type a name and press **Add yarn type**. Your yarn types appear as buttons at the top of the page. Tap one to switch to it. You can rename or delete the current one from the My threads tab. The same place has Move earlier and Move later buttons, which change the order of your yarn types. Save your stash file afterwards so the order is kept.
 
 ## Step 2: Add the threads you own
 
@@ -44,10 +44,10 @@ The left side shows what you own in this yarn type. Each thread has a note box w
 
 ## Step 3: Generate palettes
 
-Go to the **Generate** tab. You'll need at least 3 threads in the current yarn type.
+Go to the **Generate** tab. You'll need at least 2 threads in the current yarn type.
 
 - **Generate palette:** the big button at the top. Nothing happens until you press it.
-- **Number of colors:** choose between 3 and 8.
+- **Number of colors:** choose between 2 and 8 (2 gives you a simple pair, explained below).
 - **Base thread:** the thread to build the palette around. Tap one of your threads, or leave it on **Random**.
 - **Gradient threads:** how Skein treats variegated threads (explained below).
 - **Include gradient / metallic threads:** switch these off if you don't want them in your palettes.
@@ -55,6 +55,8 @@ Go to the **Generate** tab. You'll need at least 3 threads in the current yarn t
 When you press Generate, Skein builds palettes for all seven color harmonies at once. You'll see the first one, Complementary. Tap any of the buttons across the top to flip through the others. You don't need to press Generate again, and flipping is instant. If you press Generate again later, you'll stay on the harmony you were looking at.
 
 Every palette is balanced between light and dark colors, so you get a good range, not seven mid-tones.
+
+**Two-color pairs:** if you choose 2 colors, you get your base thread plus one partner, picked the way the current harmony would pick it (for example, the opposite color for Complementary). The partner is also chosen to be lighter or darker than your base, so the two read clearly together.
 
 ### The seven harmonies, in plain words
 
@@ -122,7 +124,7 @@ When you have changes that haven't been saved, you'll see **Unsaved changes** at
 
 ## Troubleshooting
 
-- **"You need at least 3 threads":** add more threads to the current yarn type, or clear some exclusions.
+- **"You need at least 2 threads":** add more threads to the current yarn type, or clear some exclusions.
 - **Fewer colors than I asked for:** similar shades are grouped together, so a small stash can run out of distinct colors. Add more variety or lower the number of colors.
 - **My SVG won't load or doesn't color right:** check that the color areas are named color1, color2, and so on, and that the file is a normal SVG.
 - **Save stash doesn't seem to do anything:** make sure the file is opened from your device, not from within an email or website preview, and check your browser's Downloads.

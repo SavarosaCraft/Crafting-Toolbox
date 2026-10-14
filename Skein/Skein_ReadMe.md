@@ -6,7 +6,7 @@
 
 Skein is a color palette helper for stitchers, tatters and other thread crafters. You tell it which threads you own, and it suggests color combinations that go well together, using only those threads. No more picking a palette you can't stitch because you're missing half the colors.
 
-It includes the full DMC color list, so you can tick off what you own. You can also add threads from any other brand, including hand-dyed and variegated ones.
+It includes the full DMC and Lizbeth color lists, so you can tick off what you own. You can also add threads from any other brand, including hand-dyed and variegated ones.
 
 ## Getting started
 
@@ -34,11 +34,13 @@ Go to **My threads**, type a name and press **Add yarn type**. Your yarn types a
 
 On the **My threads** tab, the right side is where you add threads:
 
-- Choose **DMC solids**, **DMC gradients** (variegated and multi-color threads) or **My custom**.
+- Choose **DMC**, **Lizbeth**, or **My custom**.
 - Use the search box to find a number or name, or the group menu to narrow things down.
 - Tap a swatch to add it. A check mark means you own it. Tap again to remove it.
 
-The left side shows what you own in this yarn type. Each thread has a note box where you can write things like "2 skeins" or "half used", and a ✕ button to remove it.
+For DMC and Lizbeth, use the **Solids / Gradients** switch to choose between plain threads and variegated (multi-color) ones. Lizbeth's variegated and Twirlz threads change in blocks of color, and they appear that way.
+
+The left side shows what you own in this yarn type. Each thread has a note box where you can write things like "2 skeins" or "half used", and a ✕ button to remove it. The ▲ and ▼ buttons move a thread up or down, so you can keep your list in the order you like. The Base thread row on the Generate tab follows the same order.
 
 **Adding other brands or hand-dyed threads:** open **Add a custom thread**. Enter the brand, number and name, choose Solid or Gradient (pick 2 to 4 colors for a gradient), and tick Metallic if it is one. Then press Add.
 
@@ -75,6 +77,8 @@ Every palette is balanced between light and dark colors, so you get a good range
 - Under each thread you'll see how close it is to the ideal color: **Exact match**, **Very close**, **Close match** or **Loose match**. Loose just means your stash doesn't have a closer color. It's still the best thread you own for that spot.
 - Small chips labeled **also close** show threads you own that are nearly the same color. They're grouped with the main thread, so you don't get near-duplicates.
 
+If you wrote a **note** on a thread in My threads, it appears in italics under that thread's name, on generated palettes and on saved ones.
+
 ### How gradient threads are handled
 
 Variegated threads change color along their length, so you can choose how Skein treats them:
@@ -102,12 +106,12 @@ For your design to work properly, each color area needs to be named **color1**, 
 ### Saving and sharing a palette
 
 - **☆ Save:** keeps the palette in the **Saved palettes** tab.
-- **Text list:** a copyable list of thread numbers and names, handy as a shopping or pull list. You can also save it as a text file.
-- **JPG:** a picture of the palette to save or share. Tick *Include this preview in JPG exports* if you want your design shown too.
+- **Text list:** a copyable list of thread numbers and names, handy as a shopping or pull list. You can also save it as a text file. Any notes you wrote on your threads are included.
+- **JPG:** a picture of the palette to save or share. Tick *Include this preview in JPG exports* if you want your design shown too. Notes appear under each thread. A small "Made with Skein" credit with the GitHub link sits at the bottom of the JPG and the text list.
 
 ## Saving your work
 
-Skein keeps everything in your browser only while the page is open. To keep your threads, notes, exclusions, saved palettes and loaded design:
+Skein keeps everything in your browser only while the page is open. To keep your threads, notes, thread and yarn type order, exclusions, saved palettes and loaded design:
 
 1. Press **Save stash** at the top. A file called **skein-stash.json** is downloaded.
 2. Next time, open Skein and press **Load stash**, then choose that file.
@@ -128,3 +132,7 @@ When you have changes that haven't been saved, you'll see **Unsaved changes** at
 - **Fewer colors than I asked for:** similar shades are grouped together, so a small stash can run out of distinct colors. Add more variety or lower the number of colors.
 - **My SVG won't load or doesn't color right:** check that the color areas are named color1, color2, and so on, and that the file is a normal SVG.
 - **Save stash doesn't seem to do anything:** make sure the file is opened from your device, not from within an email or website preview, and check your browser's Downloads.
+
+## About Skein
+
+Skein is free, and part of the Crafting Toolbox by Savarosa Craft. You can find the code on [GitHub](https://github.com/SavarosaCraft/Crafting-Toolbox). If it helped you pick a palette you love, you can [buy me a coffee on Ko-fi](https://ko-fi.com/savarosacraft). Thank you, and happy stitching!
